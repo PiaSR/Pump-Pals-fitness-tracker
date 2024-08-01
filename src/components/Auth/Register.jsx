@@ -18,11 +18,11 @@ const Register = () => {
 	async function onSubmit (data) {
 		try {
 			setLoading(true)
-			await signup(data.user, data.email, data.password)
-		} catch {
-			setError("password_confirm", {
+			await signup(data.email, data.password)
+		} catch (error) {
+			setError("form_error", {
 				type: "manual",
-				message: "Failed to create an account",
+				message: error.message || "Failed to create an account. Please try again.",
 			  });
 		} finally {
 		setLoading(false)
@@ -31,6 +31,7 @@ const Register = () => {
   return (
 	<div className='login-container'>
 		<h1 className='login-header'>Register</h1>
+		
 		<form onSubmit={handleSubmit(onSubmit)}>
 		<div className="login-field">
 			
@@ -61,7 +62,8 @@ const Register = () => {
 							value: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,
 							message: "Email is not valid."
 						  }
-					})} />
+					})}
+					autocomplete="email" />
 				{errors.email && <p className="errorMsg">{errors.email.message}</p>}
 			</div>
 			<div className="login-field">
@@ -95,7 +97,7 @@ const Register = () => {
             <p className="errorMsg">{errors.password_confirm.message}</p>
           )}
 			</div>
-			{!loading && <button type='submit' className='login-btn'>Log In</button>}
+			<button disabled={loading} type='submit' className='login-btn'>Log In</button>
 			
 		</form>
 	</div>
