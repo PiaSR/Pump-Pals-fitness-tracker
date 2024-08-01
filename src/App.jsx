@@ -5,13 +5,15 @@ import {
   } from "react-router-dom";
 import AppRoutes from './routes';
 import './App.css'
+import { AuthProvider } from './contexts/authContexts/authContext';
 
 function App() {
  return ( 
-	<Router basename="/pumppals-fitness-tracker">
-		<AppRoutes /> 
-	</Router>
-	
+	<AuthProvider>
+		<Router basename="/pumppals-fitness-tracker">
+			<AppRoutes /> 
+		</Router>
+	</AuthProvider>
  )
 }
 
