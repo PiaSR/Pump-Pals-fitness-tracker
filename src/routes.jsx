@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage';
 import WorkoutPage from './pages/WorkoutPage';
 import DashboardPage from './pages/DashboardPage';
 import ProgressPage from './pages/ProgressPage';
+import ProfilePage from './pages/ProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
 import { useLocation } from 'react-router-dom';
 
@@ -24,6 +25,7 @@ const AppRoutes = () => {
       <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/workout" element={<WorkoutPage />} />
       <Route path="/progress" element={<ProgressPage />} />
+      <Route path="/profile" element={<ProfilePage/>}/>
       <Route path="*" element={<NotFoundPage />} />
       console.log(path)
     </Routes>
