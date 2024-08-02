@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import { useForm } from "react-hook-form"
 import { useAuth } from '../../contexts/authContexts/authContext';
+import { Link }	from "react-router-dom"
 
 const Register = () => {
 	const {
@@ -30,7 +31,7 @@ const Register = () => {
 
   return (
 	<div className='login-container'>
-		<h1 className='login-header'>Register</h1>
+		<h1 className='login-header'>Sign Up</h1>
 		
 		<form onSubmit={handleSubmit(onSubmit)}>
 		<div className="login-field">
@@ -97,8 +98,11 @@ const Register = () => {
             <p className="errorMsg">{errors.password_confirm.message}</p>
           )}
 			</div>
-			<button disabled={loading} type='submit' className='login-btn'>Log In</button>
 			
+
+			<button disabled={loading} type='submit' className='login-btn'>Sign Up</button>
+			
+			<div className='login-p-redirect'>Already have an account? <Link to="/login">Log In</Link></div>
 		</form>
 	</div>
   )
