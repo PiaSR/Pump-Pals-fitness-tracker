@@ -19,9 +19,7 @@ export default function Login () {
 
 	async function onSubmit (data) {
 		try {
-			console.log('logging in')
 			setLoading(true)
-			console.log('loading is set to true')
 			await login(data.email, data.password)
 			console.log("login successful")
 			navigate("/")
@@ -36,13 +34,18 @@ export default function Login () {
 	}};
 
   return (
-	<div className='login-container'>
-		<h1 className='login-header'>Log In</h1>
-		<form onSubmit={handleSubmit(onSubmit)}>
-			<div className="login-field">
-				<label htmlFor="login-email">Email</label>
+	<div className='flex items-center justify-center bg-bg-primary h-screen flex-col'>
+		<h1 className='text-white'>Log In</h1>
+		
+		 
+		
+		<form onSubmit={handleSubmit(onSubmit)} className="mt-20 flex justify-center flex-col" >
+			<div className='flex flex-col justify-start'>
+				<label htmlFor="login-email"  className='text-white text-sm -mb-1.5 ml-1'>Email</label>
 				<input 
+					className='py-3.5 px-10 bg-bg-white rounded-3xl my-2.5 padding pl-5 w-64'
 					type="email" 
+					
 					id='login-email'
 					name='email'
 					autocomplete="email"
@@ -54,14 +57,16 @@ export default function Login () {
 						  }
 					
 					})} />
-				{errors.email && <p className="errorMsg">{errors.email.message}</p>}
+				{errors.email && <p className="text-white break-normal w-56 text-xs">{errors.email.message}</p>}
 			</div>
-			<div className="login-field">
-				<label htmlFor="login-password">Password</label>
+			<div className='flex flex-col justify-start'>
+				<label htmlFor="login-password" className='text-white text-sm -mb-1.5 ml-1' >Password</label>
 				<input 
+					className='py-3.5 px-10 bg-bg-white rounded-3xl my-2.5 pl-5 w-64 invalid:border-pink-500'
 					type="password" 
 					id='login-password'
 					name='password'
+					formnovalidate="formnovalidate"
 					{...register('password',
 					{
 						required: "Password is required.",
@@ -70,13 +75,13 @@ export default function Login () {
 						  message: "Password should be at-least 6 characters."
 						}})} />
 				{errors.password && (
-            <p className="errorMsg">{errors.password.message}</p>
+            <p className='text-white break-normal w-56 text-xs'>{errors.password.message}</p>
           )}
 			</div>
 
-			<button disabled= {loading} type='submit' className='login-btn'>Log In</button>
+			<button disabled= {loading} type='submit' className='btn-secondary mt-5'>Log In</button>
 
-			<div className='login-p-redirect'>Don't have an account? <Link to="/register">Sign Up</Link></div>
+			<div className='text-xs text-white self-center mt-3'>Don't have an account? <Link to="/register" className='underline'>Sign Up</Link></div>
 
 		</form>
 	</div>
