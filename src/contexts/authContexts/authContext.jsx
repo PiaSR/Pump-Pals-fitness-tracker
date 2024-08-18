@@ -12,15 +12,17 @@ export function useAuth() {
 
 export function AuthProvider ({children}) {
 
-	const [currentUser, setCurrentUser] = useState()
+	const [currentUser, setCurrentUser] = useState('')
 	const [loading, setLoading] = useState(false)
 
- function signup (email, password) {
-		return createUserWithEmailAndPassword(auth, email, password)
+	async function signup (email, password) {
+		const userCredential= await createUserWithEmailAndPassword(auth, email, password)
+		return userCredential.user;
 	}
 
- function login (email, password) {
-		return signInWithEmailAndPassword(auth, email, password)
+	async function login (email, password) {
+	const userCredential= await signInWithEmailAndPassword(auth, email, password)
+	return userCredential.user;
 	}
 
 	useEffect(() => {

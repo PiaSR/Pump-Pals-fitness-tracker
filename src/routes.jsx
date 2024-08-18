@@ -13,6 +13,7 @@ import { useLocation } from 'react-router-dom';
 const AppRoutes = () => {
   const location = useLocation();
   
+  
   React.useEffect(() => {
     console.log('Current path:', location.pathname);
   }, [location]);
