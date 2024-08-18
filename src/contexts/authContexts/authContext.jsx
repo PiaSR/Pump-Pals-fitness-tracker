@@ -1,10 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react'
-import { auth } from "/src/firebase/firebase.js" 
+import { auth, db } from "/src/firebase/firebase.js" 
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 
 
 
-const AuthContext = React.createContext();
+const AuthContext = createContext();
 
 export function useAuth() {
 	return useContext(AuthContext)
@@ -15,9 +16,28 @@ export function AuthProvider ({children}) {
 	const [currentUser, setCurrentUser] = useState('')
 	const [loading, setLoading] = useState(false)
 
-	async function signup (email, password) {
-		const userCredential= await createUserWithEmailAndPassword(auth, email, password)
-		return userCredential.user;
+	async function signup (email, password, name) {
+		
+		try {
+			// Create user with email and password
+			const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+			const user = userCredential.user;
+		
+			// Save user data to db in firestore
+			await setDoc(doc(db, "users", user.uid), {
+			  uid: user.uid,
+			  name: name, 
+			  email: user.email,
+			  createdAt: new Date(),
+			});
+		
+			// Return the user object
+			return user; 
+		  } catch (error) {
+			console.error("Error signing up:", error);
+			throw error; // Re-throw the error to be handled by the caller
+		  }
+		
 	}
 
 	async function login (email, password) {

@@ -20,7 +20,7 @@ const Register = () => {
 	async function onSubmit (data) {
 		try {
 			setLoading(true)
-			await signup(data.email, data.password)
+			await signup(data.email, data.password, data.name)
 			navigate("/")
 		} catch (error) {
 			setError("form_error", {
@@ -43,15 +43,15 @@ const Register = () => {
 					className='py-3.5 px-10 bg-bg-white rounded-3xl my-2.5 pl-5'
 					type="text" 
 					id='login-user-name'
-					name='user'
-					{...register('user', {
+					name='name'
+					{...register('name', {
 						required: "Username is required",
 						pattern: {
 							value: /^[\p{Letter}\s\-.']+$/u,
 							message: "Your name can only contain letters."
 						  }
 					})} />
-				{errors.user_name && <p className="errorMsg">{errors.user_name.message}</p>}
+				{errors.name && <p className="errorMsg">{errors.name.message}</p>}
 			</div>
 			
 			<div className='flex flex-col justify-start'>
