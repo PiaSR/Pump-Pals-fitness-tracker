@@ -1,6 +1,6 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { createContext, useContext, useState, useEffect } from 'react'
 import { auth, db } from "/src/firebase/firebase.js" 
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 
 
@@ -16,6 +16,8 @@ export function AuthProvider ({children}) {
 	const [currentUser, setCurrentUser] = useState('')
 	const [loading, setLoading] = useState(false)
 
+
+//Register a new user
 	async function signup (email, password, name) {
 		
 		try {
@@ -30,19 +32,25 @@ export function AuthProvider ({children}) {
 			  email: user.email,
 			  createdAt: new Date(),
 			});
-		
+
+			//save display name, because this doesn't get saved automatically
+			await updateProfile(user, {
+				displayName: name	
+			  });
+			  console.log("Profile updated successfully");
 			// Return the user object
 			return user; 
 		  } catch (error) {
 			console.error("Error signing up:", error);
-			throw error; // Re-throw the error to be handled by the caller
+			throw error; 
 		  }
 		
 	}
 
+//Log in an existing user
 	async function login (email, password) {
-	const userCredential= await signInWithEmailAndPassword(auth, email, password)
-	return userCredential.user;
+			const userCredential= await signInWithEmailAndPassword(auth, email, password)
+			return userCredential.user;
 	}
 
 	useEffect(() => {

@@ -10,9 +10,15 @@
   h1 {
     @apply text-4xl font-bold;
   }
+  h3 {
+    @apply text-3xl font-bold;
+  }
 }
 
 @layer components {
+  .background-purple {
+    @apply flex items-center justify-center bg-bg-primary h-screen flex-col;
+  }
   .btn-secondary {
     @apply py-3.5 px-10 bg-bg-secondary text-black rounded-3xl font-bold text-base;
   }

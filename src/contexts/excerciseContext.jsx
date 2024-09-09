@@ -12,7 +12,6 @@ export function useExercise() {
 export function ExerciseProvider({ children }) {
   const [exercises, setExercises] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   const BASE_URL = "https://exercise-db-fitness-workout-gym.p.rapidapi.com";
   const HEADERS = {
@@ -20,7 +19,7 @@ export function ExerciseProvider({ children }) {
   "X-RapidAPI-Host": "exercise-db-fitness-workout-gym.p.rapidapi.com"
 };
 
-  //general API call
+  //memoizing fetch function
   const fetchExercises = useCallback(async (endpoint) => {
     setLoading(true)
     try {

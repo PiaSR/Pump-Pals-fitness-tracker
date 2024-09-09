@@ -34,7 +34,7 @@ export default function Login () {
 	}};
 
   return (
-	<div className='flex items-center justify-center bg-bg-primary h-screen flex-col'>
+	<div className='background-purple'>
 		<h1 className='text-white'>Log In</h1>
 		
 		 
