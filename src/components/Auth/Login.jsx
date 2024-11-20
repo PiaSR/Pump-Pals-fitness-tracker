@@ -24,11 +24,12 @@ export default function Login () {
 			console.log("login successful")
 			navigate("/")
 		} catch (error) {
-			console.log(error)
+			console.log("there was an error logging in:", error)
 			setError("form_error", {
 				type: "manual",
 				message: error.message || "Failed to log in. Please try again.",
 			  });
+			  alert("Logging in was unsuccessful. Email or password are incorrect. Please try again.")
 		} finally {
 		setLoading(false)
 	}};
