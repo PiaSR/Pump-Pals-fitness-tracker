@@ -19,7 +19,7 @@ const WorkoutPage = ( ) => {
   )
   //map all individual exercises that match the search query, or show all if query is empty, show exercise as li
   const exerciseList = filteredExercises.map(exercise => (
-    <li key={exercise} className="list-none">{exercise.originalName}</li>
+    <li key={exercise.originalName} className="list-none">{exercise.originalName}</li>
   ))
 
 const handleSearchChange = (e) => {
