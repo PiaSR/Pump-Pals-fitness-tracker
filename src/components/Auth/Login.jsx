@@ -35,16 +35,16 @@ export default function Login () {
 	}};
 
   return (
-	<div className='background-purple'>
-		<h1 className='text-white'>Log In</h1>
+	<div className='flex items-center justify-center flex-col max-w-md bg-white bg-opacity-30 p-8 rounded-3xl'>
+		<h1 className='text-white mt-6'>Log In</h1>
 		
 		 
 		
-		<form onSubmit={handleSubmit(onSubmit)} className="mt-20 flex justify-center flex-col" >
+		<form onSubmit={handleSubmit(onSubmit)} className="mt-14 flex justify-center flex-col" >
 			<div className='flex flex-col justify-start'>
 				<label htmlFor="login-email"  className='text-white text-sm -mb-1.5 ml-1'>Email</label>
 				<input 
-					className='py-3.5 px-10 bg-bg-white rounded-3xl my-2.5 padding pl-5 w-64'
+					className='py-3.5 px-10 bg-bg-white bg-opacity-30 rounded-3xl my-2.5 padding pl-5 w-64'
 					type="email" 
 					
 					id='login-email'
@@ -61,9 +61,9 @@ export default function Login () {
 				{errors.email && <p className="text-white break-normal w-56 text-xs">{errors.email.message}</p>}
 			</div>
 			<div className='flex flex-col justify-start'>
-				<label htmlFor="login-password" className='text-white text-sm -mb-1.5 ml-1' >Password</label>
+				<label htmlFor="login-password" className='text-white text-sm -mb-1.5 ml-1 bg-opacity-30' >Password</label>
 				<input 
-					className='py-3.5 px-10 bg-bg-white rounded-3xl my-2.5 pl-5 w-64 invalid:border-pink-500'
+					className='py-3.5 px-10  bg-bg-white bg-opacity-30  rounded-3xl my-2.5 pl-5 w-64 invalid:border-pink-500 '
 					type="password" 
 					id='login-password'
 					name='password'

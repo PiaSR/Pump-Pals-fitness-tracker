@@ -11,6 +11,7 @@ export function useExercise() {
 
 export function ExerciseProvider({ children }) {
   const [exercises, setExercises] = useState([]);
+  const [allExercises, setAllExercises] = useState([]); //to cache full exercise list
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -29,11 +30,7 @@ export function ExerciseProvider({ children }) {
       if (!response.ok) throw new Error(`Error: ${response.status} ${response.statusText}`);
       const data = await response.json()
      
-      const formattedExercises = data.excercises_ids.map((exercise) => ({
-        originalName: exercise.replaceAll("_", " "), // "Push-Up"; replace all underscores from data results
-        normalizedName: exercise.replaceAll(/[-_]/g, "").toLowerCase().trim() // "pushup"; to include spelling variations when used in search results
-      }));
-      setExercises(formattedExercises)
+     return data; //raw data to be used in further calls
 
     } catch (error) {
       console.log('error fetching exercises:', error);
@@ -43,21 +40,67 @@ export function ExerciseProvider({ children }) {
     }
   }, [])
 
-//setting different endpoints depending on filter
-const fetchExercisesByEquipment = (equipment) => {
-  fetchExercises(`/exercises/equipment/${equipment}`)
-}
+  const fetchAllExercises = useCallback(async () => {
+    if (allExercises.length > 0) {
+      setExercises(allExercises);
+      return;
+    }
 
-const fetchExercisesByMuscle = (muscle) => {
-  fetchExercises(`/exercises/muscle/${muscle}`)
-}
+        const data = await fetchExercises('/exercises');
+        if (data && data.excercises_ids) {
+          const formattedExercises = data.excercises_ids.map((id) => ({
+            id,
+            name: id.replaceAll("_", " "), // "Push-Up"
+            normalizedName: id.replaceAll(/[-_]/g, "").toLowerCase().trim(), // "pushup" 
+          }));
+          setAllExercises(formattedExercises); // Cache full list
+          setExercises(formattedExercises); 
+        }
+  }, [fetchExercises, allExercises]);
 
-const fetchAllExercises = () => {
-  fetchExercises('/exercises')
-}
+  // Fetch exercises filtered by muscle
+  const fetchExercisesByMuscle = useCallback(async (muscle) => {
+   
+        const data = await fetchExercises(`/exercises/muscle/${muscle}`);
+        
+        if (data) {
+          const formattedExercises = data.map((exercise) => ({
+            id: exercise.id,
+            name: exercise.name,
+            normalizedName: exercise.name.replaceAll(/[-_]/g, "").toLowerCase().trim(),
+            category: exercise.category,
+            equipment: exercise.equipment,
+            level: exercise.level,
+            primaryMuscles: exercise.primaryMuscles || [],
+            secondaryMuscles: exercise.secondaryMuscles || [],
+          }));
+       
+          setExercises(formattedExercises); // Set filtered exercises
+        } 
+  }, [fetchExercises]);
+
+  // Fetch exercises filtered by equipment
+  const fetchExercisesByEquipment = useCallback(async (equipment) => {
+        const data = await fetchExercises(`/exercises/equipment/${equipment}`);
+        if (data) {
+          const formattedExercises = data.map((exercise) => ({
+            id: exercise.id,
+            name: exercise.name,
+            normalizedName: exercise.name.replaceAll(/[-_]/g, "").toLowerCase().trim(),
+            category: exercise.category,
+            equipment: exercise.equipment,
+            level: exercise.level,
+            primaryMuscles: exercise.primaryMuscles || [],
+            secondaryMuscles: exercise.secondaryMuscles || [],
+          }));
+          setExercises(formattedExercises); // Set filtered exercises
+        }
+  }, [fetchExercises]);
+
 
 const value = {
   exercises,
+  allExercises,
   loading,
   error,
   fetchExercisesByEquipment,

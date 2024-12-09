@@ -4,10 +4,12 @@
 
 * {
   font-family: Inter, sans-serif;
-  background-color: #fafcee;
 }
 
 @layer base {
+  html {
+    @apply bg-radial-gradient h-full flex justify-center items-center;
+  }
   h1 {
     @apply text-4xl font-bold;
   }
@@ -20,8 +22,9 @@
   .background-purple {
     @apply flex items-center justify-center bg-bg-primary h-screen flex-col;
   }
+
   .btn-secondary {
-    @apply py-3.5 px-10 bg-bg-secondary text-black rounded-3xl font-bold text-base;
+    @apply py-3.5 px-10 bg-bg-primary bg-opacity-75 text-white rounded-3xl font-bold text-base;
   }
   .alert {
     @apply p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-200 dark:bg-gray-800 dark:text-red-400;

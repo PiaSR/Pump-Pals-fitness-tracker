@@ -1,29 +1,36 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
-import { useExercise } from '/src/contexts/exerciseContext';
 
-export default function DropdownMuscleGroups() {
-  const { fetchExercisesByMuscle, loading, error } = useExercise();
+
+export default function DropdownMuscleGroups({setMuscleGroup}) {
+ 
 
   const muscleGroups = [
-    "Chest",
-    "Back",
+    "Abdominals",
     "Biceps",
-    "Triceps",
-    "Shoulders",
-    "Legs",
-    "Abs",
+    "Calves",
+    "Chest",
+    "Forearms",
     "Glutes",
     "Hamstrings",
-    "Quads",
+    "Lats",
+    "Lower Back",
+    "Middle Back",
+    "Triceps",
+    "Shoulders",
+    "Traps",
+    "Quadriceps"
   ];
 
   const handleSelect = (muscle) => {
-    fetchExercisesByMuscle(muscle.toLowerCase());
-    console.log("muscle", muscle)
+    
+    setMuscleGroup(muscle.toLowerCase());
+    
   };
 
+
   return (
+    <div className="space-y-4">
     <Menu as="div" className="relative inline-block text-left">
       <div>
         <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-full bg-bg-white px-3 py-2 text-sm font-normal text-dark-grey shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-bg-whitegrey hover:text-black" >
@@ -38,7 +45,7 @@ export default function DropdownMuscleGroups() {
       >
         <div className="py-1">
           {muscleGroups.map((muscle, index) => (
-             // eslint-disable-next-line
+             
             <MenuItem key={index}>
               {({ active }) => (
                 
@@ -56,5 +63,8 @@ export default function DropdownMuscleGroups() {
         </div>
       </MenuItems>
     </Menu>
+
+     
+    </div>
   );
 }

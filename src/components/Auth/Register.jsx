@@ -32,15 +32,15 @@ const Register = () => {
 	}};
 
   return (
-	<div className='background-purple'>
-		<h1 className='text-white'>Sign Up</h1>
+	<div className='flex items-center justify-center flex-col max-w-md bg-white bg-opacity-30 p-8 rounded-3xl'>
+		<h1 className='text-white mt-6'>Sign Up</h1>
 		
 		<form onSubmit={handleSubmit(onSubmit)} className="mt-14 flex justify-center flex-col">
 			<div className='flex flex-col justify-start'>
 			
 				<label htmlFor="login-user-name" className='text-white text-sm -mb-1.5 ml-1'>Name</label>
 				<input 
-					className='py-3.5 px-10 bg-bg-white rounded-3xl my-2.5 pl-5'
+					className='py-3.5 px-10 bg-bg-white bg-opacity-30 rounded-3xl my-2.5 pl-5'
 					type="text" 
 					id='login-user-name'
 					name='name'
@@ -57,7 +57,7 @@ const Register = () => {
 			<div className='flex flex-col justify-start'>
 
 				<label htmlFor="login-email" className='text-white text-sm -mb-1.5 ml-1'>Email</label>
-				<input className='py-3.5 px-10 bg-bg-white rounded-3xl my-2.5 pl-5'
+				<input className='py-3.5 px-10 bg-bg-white bg-opacity-30 rounded-3xl my-2.5 pl-5'
 					type="email" 
 					id='login-email'
 					name='email'
@@ -74,7 +74,7 @@ const Register = () => {
 			<div className='flex flex-col justify-start'>
 
 				<label htmlFor="login-password" className='text-white text-sm -mb-1.5 ml-1'>Password</label>
-				<input className='py-3.5 px-10 bg-bg-white rounded-3xl my-2.5 pl-5'
+				<input className='py-3.5 px-10 bg-bg-white bg-opacity-30 rounded-3xl my-2.5 pl-5'
 					type="password" 
 					id='login-password'
 					name='password'
@@ -92,7 +92,7 @@ const Register = () => {
 			<div className='flex flex-col justify-start'>
 
 				<label htmlFor="login-password-confirm" className='text-white text-sm -mb-1.5 ml-1'>Confirm Password</label>
-				<input className='py-3.5 px-10 bg-bg-white rounded-3xl my-2.5 pl-5'
+				<input className='py-3.5 px-10 bg-bg-white bg-opacity-30 rounded-3xl my-2.5 pl-5'
 					type="password" 
 					id='login-password-confirm'
 					name='password_confirm'

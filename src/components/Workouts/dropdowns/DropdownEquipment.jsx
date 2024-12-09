@@ -2,8 +2,8 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { useExercise } from '/src/contexts/exerciseContext';
 
-export default function DropdownMuscleGroups() {
-  const { fetchExercisesByEquipment, loading, error } = useExercise();
+export default function DropdownMuscleGroups({setEquipment}) {
+  // const { fetchExercisesByEquipment, loading, error } = useExercise();
 
   const equipmentGroups = [
     "Barbell",
@@ -16,13 +16,14 @@ export default function DropdownMuscleGroups() {
     "Medicine Ball",
     "Exercise Ball",
     "Foam Roll",
-	"EZ Curl Bar",
+	"E-Z Curl Bar",
 	"Other"
   ];
 
-  const handleSelect = (muscle) => {
-    fetchExercisesByEquipment(equipment.toLowerCase());
-    console.log("equipment", equipment)
+  const handleSelect = (equipment) => {
+    setEquipment(equipment.toLowerCase());
+   
+    
   };
 
   return (
