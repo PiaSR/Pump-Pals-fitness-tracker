@@ -2,7 +2,7 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { useExercise } from '/src/contexts/exerciseContext';
 
-export default function DropdownMuscleGroups({setEquipment}) {
+export default function DropdownMuscleGroups({equipment, setEquipment}) {
   // const { fetchExercisesByEquipment, loading, error } = useExercise();
 
   const equipmentGroups = [
@@ -29,8 +29,10 @@ export default function DropdownMuscleGroups({setEquipment}) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-full bg-bg-white px-3 py-2 text-sm font-normal text-dark-grey shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-bg-whitegrey hover:text-black" >
-          Equipment
+        <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-full bg-white px-3 py-2 text-sm font-normal text-dark-grey shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100 hover:text-gray-700" >
+          <span>{equipment.split(" ").map((word) => {
+            return word.charAt(0).toUpperCase()+ word.slice(1)
+          }).join(" ") || "Equipment"}</span>
           <ChevronDownIcon aria-hidden="true" className="-mr-1 size-5 text-current bg-inherit hover:bg-inherit" />
         </MenuButton>
       </div>
