@@ -1,12 +1,12 @@
 import React, {useState, useEffect, useCallback} from 'react'
-import { useExercise } from '../contexts/exerciseContext'
+import { useExercise } from '/src/contexts/exerciseContext'
 import { IoMdSearch } from "react-icons/io";
 import { FaCirclePlus } from "react-icons/fa6";
 
 
 import DropdownMuscleGroups from '/src/components/Workouts/dropdowns/DropdownMuscleGroups.jsx';
 import DropdownEquipment from '/src/components/Workouts/dropdowns/DropdownEquipment';
-import BtnFavorite from '../components/Workouts/BtnFavorite';
+import BtnFavorite from '/src/components/Workouts/BtnFavorite';
 
 const WorkoutSearch = () => {
 	const {exercises, fetchAllExercises,fetchExercisesByMuscle, fetchExercisesByEquipment, loading, error} = useExercise();
@@ -88,62 +88,67 @@ const WorkoutSearch = () => {
 	  }
   
 	return (
-	  <div className='flex flex-col justify-start items-center h-[100dvh] min-w-[360px] pb-6 sm:h-[90dvh] bg-bg-white bg-opacity-60 sm:rounded-3xl sm:m-3'>
-		<div className='flex flex-col content-center justify-center p-0 m-0  w-full mt-3  '>
-	   
+	<div className='flex flex-col justify-start items-center pb-5 w-[100dvw]  h-[100dvh] sm:w-[80dvw] md:w-[70dvw] lg:max-w-4xl sm:h-[90dvh] bg-bg-white bg-opacity-60 sm:rounded-3xl sm:m-3'>
+		
+		{/* container for both search bar and UL */}
+		
+	   {/* flex items-start lg:items-center flex-col */}
 	   {/* SEARCH BAR SECTION */}
-			<div className=' p-4 flex content-center justify-start flex-col sm:rounded-t-3xl '>  
+			<div className='w-full lg:max-w-xl p-4 grid grid-cols-1 sm:rounded-t-3xl mt-3 mb-2'>  
 			  
-			<div className="relative rounded-full flex gap-2">
-			  <input
-				type="text"
-				value={searchInput}
-				onChange={handleSearchChange}
-				placeholder='Search Exercise'
-				className="w-full pl-10 pr-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-slate-400 text-sm text-gray-700 "
-				
-			  />
-			  <div className="absolute inset-y-0 left-0 flex items-center pl-3 rounded-full pointer-events-none">
-			  <IoMdSearch className='text-gray-400' />
-			  </div>
+					<div className="relative rounded-full flex gap-2 w-full ">
+					<input
+						type="text"
+						value={searchInput}
+						onChange={handleSearchChange}
+						placeholder='Search Exercise'
+						className="w-full pl-10 pr-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-slate-400 text-sm text-gray-700 "
+						
+					/>
+					<div className="absolute inset-y-0 left-0 flex items-center pl-3 rounded-full pointer-events-none">
+					<IoMdSearch className='text-gray-400' />
+					</div>
 			  {/* <button type='submit' className='bg-black rounded-full px-3 text-white w-1/4'>
 				
 				Search
 				</button> */}
 			</div>
 		  
+		 		
+				{/* container for favorites and dropdowns */}
 		 
-			<div className='flex mt-3 gap-2'> {/* container for favorites and dropdowns */}
-			  <BtnFavorite />
-			  <DropdownMuscleGroups 
-			  muscleGroup={muscleGroup}
-			setMuscleGroup={setMuscleGroup}
-			  
-			  />
-			  <DropdownEquipment  
-			  equipment={equipment}
-			  setEquipment={setEquipment}
-			  />
+				<div className='grid grid-cols-[auto_1fr_1fr] mt-3 gap-2 lg:gap-4 w-full lg:justify-center'> 
+				<BtnFavorite />
+				<DropdownMuscleGroups 
+				muscleGroup={muscleGroup}
+				setMuscleGroup={setMuscleGroup}
+				
+				/>
+				<DropdownEquipment  
+				equipment={equipment}
+				setEquipment={setEquipment}
+				/>
+				</div>
 			</div>
-			</div>
-		  </div>
+	 
   
 		  {/* LIST SECTION */}
   
-			<div className='overflow-scroll flex' > 
+			<div className='overflow-y-auto overflow-x-hidden flex' > 
 			  {loading && <p>Loading exercises...</p>}
 			  {error && <p>Error: {error}</p>}
 			  
 			  {filteredExercises.length > 0 
 				? (
-				<ul className=''>
+				<ul className='w-full'>
 				  {filteredExercises.map((exercise) => (
-					<li key={exercise.id} className="list-none flex flex-col hover:bg-bg-white hover:bg-opacity-30">
-					  <div className='flex justify-between items-center text-sm text-gray-700 px-7 py-6'>
-					  <span>{exercise.name} </span> 
-					  <FaCirclePlus className='inline-block ml-auto text-xl text-gray-700' />
+					<li key={exercise.id} className="w-full list-none flex  flex-col hover:bg-bg-white hover:bg-opacity-30">
+					  <div className='grid grid-cols-[1fr_auto] items-center text-sm text-gray-700 px-7 py-6  '>
+					  <div className='truncate'>{exercise.name} </div> 
+					  
+					  <FaCirclePlus className='text-xl text-gray-700' />
 					  </div>
-					  <hr className='border-solid border-gray-200 w-full block'/>
+					  <hr className='border-solid border-gray-200 w-full '/>
 					</li>
 				  ))}
 				</ul>
@@ -153,7 +158,8 @@ const WorkoutSearch = () => {
   
 			  
 			</div>
-		</div>
+		
+	</div>
 	 
 	  
 	)
