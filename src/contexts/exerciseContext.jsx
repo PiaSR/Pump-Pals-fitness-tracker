@@ -12,6 +12,7 @@ export function useExercise() {
 export function ExerciseProvider({ children }) {
   const [exercises, setExercises] = useState([]);
   const [allExercises, setAllExercises] = useState([]); //to cache full exercise list
+  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -40,6 +41,8 @@ export function ExerciseProvider({ children }) {
     }
   }, [])
 
+
+  //IF NO FILTER IS APPLIED, WE NEED FULL LIST OF EXERCISES (ONLY IDs, NOT FULL OBJECTS AVAILABLE)
   const fetchAllExercises = useCallback(async () => {
     if (allExercises.length > 0) {
       setExercises(allExercises);
@@ -58,6 +61,34 @@ export function ExerciseProvider({ children }) {
         }
   }, [fetchExercises, allExercises]);
 
+
+  //fetch exercise object if no filter applied
+
+  const fetchExerciseById = useCallback(async (id) => {
+
+    const data =await fetchExercises(`/exercise/${id}`)
+    console.log("Fetched exercise data:", data);
+    if (data) {
+      const exercise = ({
+        id: data.id,
+        name: data.name,
+        normalizedName: data.name.replaceAll(/[-_]/g, "").toLowerCase().trim(),
+        category: data.category,
+        equipment: data.equipment,
+        level: data.level,
+        primaryMuscles: data.primaryMuscles || [],
+        secondaryMuscles: data.secondaryMuscles || [],
+        maxReps: 0,
+        maxWeight: 0
+      });
+   
+      return exercise
+    }  else {
+      return null
+    }
+    
+  }, [fetchExercises, setExercises])
+
   // Fetch exercises filtered by muscle
   const fetchExercisesByMuscle = useCallback(async (muscle) => {
    
@@ -73,6 +104,8 @@ export function ExerciseProvider({ children }) {
             level: exercise.level,
             primaryMuscles: exercise.primaryMuscles || [],
             secondaryMuscles: exercise.secondaryMuscles || [],
+            maxReps: 0,
+            maxWeight: 0
           }));
        
           setExercises(formattedExercises); // Set filtered exercises
@@ -92,6 +125,8 @@ export function ExerciseProvider({ children }) {
             level: exercise.level,
             primaryMuscles: exercise.primaryMuscles || [],
             secondaryMuscles: exercise.secondaryMuscles || [],
+            maxReps: 0,
+            maxWeight: 0
           }));
           setExercises(formattedExercises); // Set filtered exercises
         }
@@ -103,6 +138,7 @@ const value = {
   allExercises,
   loading,
   error,
+  fetchExerciseById,
   fetchExercisesByEquipment,
   fetchExercisesByMuscle,
   fetchAllExercises

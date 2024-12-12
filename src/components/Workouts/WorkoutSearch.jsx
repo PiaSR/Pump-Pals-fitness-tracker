@@ -7,12 +7,14 @@ import { FaCirclePlus } from "react-icons/fa6";
 import DropdownMuscleGroups from '/src/components/Workouts/dropdowns/DropdownMuscleGroups.jsx';
 import DropdownEquipment from '/src/components/Workouts/dropdowns/DropdownEquipment';
 import BtnFavorite from '/src/components/Workouts/BtnFavorite';
+import ExerciseInfo from './ExerciseInfo';
 
 const WorkoutSearch = () => {
-	const {exercises, fetchAllExercises,fetchExercisesByMuscle, fetchExercisesByEquipment, loading, error} = useExercise();
+	const {exercises, fetchAllExercises,fetchExercisesByMuscle, fetchExercisesByEquipment, fetchExerciseById, loading, error} = useExercise();
 	const [searchInput, setSearchInput] =useState("");
 	const [muscleGroup, setMuscleGroup] = useState("");
 	const [equipment, setEquipment] = useState("");
+	const [selectedExercise, setSelectedExercise] = useState(null);
   
 	//fetch the exercises from API (function from exerciseContext)
 	useEffect(() => {
@@ -34,6 +36,7 @@ const WorkoutSearch = () => {
 	  }
 	  
 	}, []);
+
 	
   //only fetch from the /muscle endpoint (in handleMuscleGroupChange) if a muscle group gets selected in the dropdown
   useEffect(() => {
@@ -58,7 +61,22 @@ const WorkoutSearch = () => {
 	  }
 	}, [equipment,handleEquipmentGroupChange ])
   
-	
+
+	const showExerciseInfo = async (id) => {
+		try {
+			const exercise = await fetchExerciseById(id)
+			console.log("Exercise fetched and returned:", exercise); 
+			setSelectedExercise(exercise)
+			
+		}
+		catch (error) {
+			console.error("Error fetching exercise by ID:", error);
+		  }
+	}
+
+
+
+
 	//filter exercise data to match search bar input and/or dropdown selection
 	const filteredExercises = exercises.filter(exercise => {
 	 
@@ -87,6 +105,8 @@ const WorkoutSearch = () => {
 		return <p>Error: {error}</p>;
 	  }
   
+
+	
 	return (
 	<div className='flex flex-col justify-start items-center pb-5 w-[100dvw]  h-[100dvh] sm:w-[80dvw] md:w-[70dvw] lg:max-w-4xl sm:h-[90dvh] bg-bg-white bg-opacity-60 sm:rounded-3xl sm:m-3'>
 		
@@ -140,15 +160,16 @@ const WorkoutSearch = () => {
 			  {loading && <p>Loading exercises...</p>}
 			  {error && <p>Error: {error}</p>}
 			  
-			  {filteredExercises.length > 0 
+			  {filteredExercises && filteredExercises.length > 0 
 				? (
-				<ul className='w-full'>
+				<ul className='w-full min-w-[320px]'>
 				  {filteredExercises.map((exercise) => (
 					<li key={exercise.id} className="w-full list-none flex  flex-col hover:bg-bg-white hover:bg-opacity-30">
+						
 					  <div className='grid grid-cols-[1fr_auto] items-center text-sm text-gray-700 px-7 py-6  '>
 					  <div className='truncate'>{exercise.name} </div> 
 					  
-					  <FaCirclePlus className='text-xl text-gray-700' />
+					  <FaCirclePlus className='text-xl text-gray-700' onClick={()=>showExerciseInfo(exercise.id)} />
 					  </div>
 					  <hr className='border-solid border-gray-200 w-full '/>
 					</li>
@@ -158,6 +179,7 @@ const WorkoutSearch = () => {
 				<p>No exercises found</p>
 			  )}
   
+ 			 {selectedExercise && <ExerciseInfo exercise={selectedExercise} /> }
 			  
 			</div>
 		
