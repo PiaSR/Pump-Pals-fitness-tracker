@@ -30,12 +30,12 @@ export default function DropdownMuscleGroups({muscleGroup,setMuscleGroup}) {
 
 
   return (
-    <div className="space-y-4">
-    <Menu as="div" className=" inline-block text-left">
+    <div>
+    <Menu as="div" className="relative inline-block text-left">
       <div>
-        <MenuButton className="inline-flex justify-center gap-x-1.5 rounded-full bg-white px-3 py-2 text-sm font-normal text-dark-grey shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100 hover:text-gray-700" >
-        <span>{muscleGroup.charAt(0).toUpperCase()+muscleGroup.slice(1) || "Muscle Groups"}</span>
-          
+        <MenuButton className="max-h-[36px] inline-flex w-full justify-center rounded-full bg-white px-3 py-2 text-sm font-normal text-dark-grey shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100 hover:text-gray-700 overflow-hidden" >
+        <span className="hidden sm:block text-ellipsis">{muscleGroup.charAt(0).toUpperCase() + muscleGroup.slice(1) || "Muscle Groups"}</span>
+        <span className="block sm:hidden text-ellipsis">Muscles</span>
           <ChevronDownIcon aria-hidden="true" className="-mr-1 size-5 text-current bg-inherit hover:bg-inherit" />
         </MenuButton>
       </div>

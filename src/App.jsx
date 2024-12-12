@@ -7,7 +7,7 @@ import AppRoutes from './routes';
 import './styles.css'
 import { AuthProvider } from './contexts/authContexts/authContext';
 import { ExerciseProvider } from './contexts/exerciseContext';
-import GlobalBackground from './components/GlobalBackground';
+
 
 function App() {
  return ( 

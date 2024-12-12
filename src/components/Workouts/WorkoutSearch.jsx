@@ -117,12 +117,14 @@ const WorkoutSearch = () => {
 		 		
 				{/* container for favorites and dropdowns */}
 		 
-				<div className='grid grid-cols-[auto_1fr_1fr] mt-3 gap-2 lg:gap-4 w-full lg:justify-center'> 
-				<BtnFavorite />
+				<div className='grid grid-cols-[auto_1fr_1fr] xs:grid-cols-3 place-items-center gap-2 lg:gap-4 mt-3 w-full lg:justify-center min-w-full '> 
+				<div className="flex justify-center sm:justify-start">
+				<BtnFavorite  />
+				</div>
 				<DropdownMuscleGroups 
 				muscleGroup={muscleGroup}
 				setMuscleGroup={setMuscleGroup}
-				
+			
 				/>
 				<DropdownEquipment  
 				equipment={equipment}

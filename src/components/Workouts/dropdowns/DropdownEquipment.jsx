@@ -29,7 +29,7 @@ export default function DropdownMuscleGroups({equipment, setEquipment}) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-full bg-white px-3 py-2 text-sm font-normal text-dark-grey shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100 hover:text-gray-700" >
+        <MenuButton className="inline-flex min-w-full  justify-center rounded-full bg-white px-3 py-2  text-sm font-normal text-dark-grey shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100 hover:text-gray-700" >
           <span>{equipment.split(" ").map((word) => {
             return word.charAt(0).toUpperCase()+ word.slice(1)
           }).join(" ") || "Equipment"}</span>
