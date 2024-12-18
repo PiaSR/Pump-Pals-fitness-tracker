@@ -4,16 +4,19 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfi
 import { doc, setDoc } from "firebase/firestore";
 
 
+const INITIAL_STATE = {
+	currentUser: JSON.parse(localStorage.getItem('user')) || null
+}
 
-const AuthContext = createContext();
+const AuthContext = createContext(INITIAL_STATE);
 
 export function useAuth() {
 	return useContext(AuthContext)
 }
 
-export function AuthProvider ({children}) {
+ export function AuthProvider ({children}) {
 
-	const [currentUser, setCurrentUser] = useState('')
+	const [currentUser, setCurrentUser] = useState(INITIAL_STATE) 
 	const [loading, setLoading] = useState(false)
 
 
@@ -56,12 +59,26 @@ export function AuthProvider ({children}) {
 	useEffect(() => {
 		setLoading(true)
 		const unsubscribe = auth.onAuthStateChanged(user => {
-			
-			setCurrentUser(user)
+			console.log('Auth state changed:', user); // Debug log
+			setCurrentUser(user);
+
+			// Save to localStorage
+			if (user) {
+				localStorage.setItem("user", JSON.stringify({
+					uid: user.uid,
+					email: user.email,
+					displayName: user.displayName
+				}));
+			} else {
+				localStorage.removeItem("user");
+			}
 			setLoading(false)
+			
 	})
 	return unsubscribe
 	}, [])
+
+	
 
 	const value = {
 		currentUser,
