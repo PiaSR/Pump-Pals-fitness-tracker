@@ -1,6 +1,8 @@
-import React from 'react'
+import React, {useState} from 'react'
 
 const FavoriteWorkouts = () => {
+
+  
   return (
 	<div>FavoriteWorkouts</div>
   )

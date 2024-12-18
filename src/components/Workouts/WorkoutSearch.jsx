@@ -6,15 +6,17 @@ import { FaCirclePlus } from "react-icons/fa6";
 
 import DropdownMuscleGroups from '/src/components/Workouts/dropdowns/DropdownMuscleGroups.jsx';
 import DropdownEquipment from '/src/components/Workouts/dropdowns/DropdownEquipment';
-import BtnFavorite from '/src/components/Workouts/BtnFavorite';
-import ExerciseInfo from './ExerciseInfo';
+import BtnFavoriteList from '/src/components/Buttons/BtnFavoriteList.jsx';
+import { useNavigate } from 'react-router-dom';
+
 
 const WorkoutSearch = () => {
-	const {exercises, fetchAllExercises,fetchExercisesByMuscle, fetchExercisesByEquipment, fetchExerciseById, loading, error} = useExercise();
+	const {exercises,selectedExercise, fetchAllExercises,fetchExercisesByMuscle, fetchExercisesByEquipment, getExerciseByIdObject, loading, error} = useExercise();
 	const [searchInput, setSearchInput] =useState("");
 	const [muscleGroup, setMuscleGroup] = useState("");
 	const [equipment, setEquipment] = useState("");
-	const [selectedExercise, setSelectedExercise] = useState(null);
+	const navigate = useNavigate()
+	
   
 	//fetch the exercises from API (function from exerciseContext)
 	useEffect(() => {
@@ -62,18 +64,11 @@ const WorkoutSearch = () => {
 	}, [equipment,handleEquipmentGroupChange ])
   
 
-	const showExerciseInfo = async (id) => {
-		try {
-			const exercise = await fetchExerciseById(id)
-			console.log("Exercise fetched and returned:", exercise); 
-			setSelectedExercise(exercise)
-			
-		}
-		catch (error) {
-			console.error("Error fetching exercise by ID:", error);
-		  }
+	const goToExerciseInfo = (id) => {
+		getExerciseByIdObject(id)
+		console.log("clicked on button, fetched data", id)
+		navigate("/information")
 	}
-
 
 
 
@@ -139,7 +134,7 @@ const WorkoutSearch = () => {
 		 
 				<div className='grid grid-cols-[auto_1fr_1fr] xs:grid-cols-3 place-items-center gap-2 lg:gap-4 mt-3 w-full lg:justify-center min-w-full '> 
 				<div className="flex justify-center sm:justify-start">
-				<BtnFavorite  />
+				<BtnFavoriteList onClick={() => navigate("/favorites")} />
 				</div>
 				<DropdownMuscleGroups 
 				muscleGroup={muscleGroup}
@@ -167,9 +162,9 @@ const WorkoutSearch = () => {
 					<li key={exercise.id} className="w-full list-none flex  flex-col hover:bg-bg-white hover:bg-opacity-30">
 						
 					  <div className='grid grid-cols-[1fr_auto] items-center text-sm text-gray-700 px-7 py-6  '>
-					  <div className='truncate'>{exercise.name} </div> 
+					  <div className='truncate' onClick={()=>goToExerciseInfo(exercise.id)} >{exercise.name} </div> 
 					  
-					  <FaCirclePlus className='text-xl text-gray-700' onClick={()=>showExerciseInfo(exercise.id)} />
+					  <FaCirclePlus className='text-xl text-gray-700'  />
 					  </div>
 					  <hr className='border-solid border-gray-200 w-full '/>
 					</li>
@@ -179,7 +174,7 @@ const WorkoutSearch = () => {
 				<p>No exercises found</p>
 			  )}
   
- 			 {selectedExercise && <ExerciseInfo exercise={selectedExercise} /> }
+ 			 
 			  
 			</div>
 		

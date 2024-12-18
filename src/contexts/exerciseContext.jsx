@@ -2,6 +2,8 @@
 import React, { createContext, useState, useContext, useCallback } from 'react';
 import { db } from "/src/firebase/firebase.js" 
 import { doc, setDoc } from "firebase/firestore";
+import { Link, useNavigate } from "react-router-dom"
+
 
 const ExerciseContext = createContext();
 
@@ -12,6 +14,8 @@ export function useExercise() {
 export function ExerciseProvider({ children }) {
   const [exercises, setExercises] = useState([]);
   const [allExercises, setAllExercises] = useState([]); //to cache full exercise list
+  const [selectedExercise, setSelectedExercise] = useState(null);
+  const [favorites, setFavorites] = useState([])
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -69,12 +73,13 @@ export function ExerciseProvider({ children }) {
     const data =await fetchExercises(`/exercise/${id}`)
     console.log("Fetched exercise data:", data);
     if (data) {
-      const exercise = ({
+      const individualExercise = ({
         id: data.id,
         name: data.name,
         normalizedName: data.name.replaceAll(/[-_]/g, "").toLowerCase().trim(),
         category: data.category,
         equipment: data.equipment,
+        instructions: data.instructions || [],
         level: data.level,
         primaryMuscles: data.primaryMuscles || [],
         secondaryMuscles: data.secondaryMuscles || [],
@@ -82,12 +87,14 @@ export function ExerciseProvider({ children }) {
         maxWeight: 0
       });
    
-      return exercise
+      return individualExercise
     }  else {
       return null
     }
     
   }, [fetchExercises, setExercises])
+
+
 
   // Fetch exercises filtered by muscle
   const fetchExercisesByMuscle = useCallback(async (muscle) => {
@@ -132,9 +139,31 @@ export function ExerciseProvider({ children }) {
         }
   }, [fetchExercises]);
 
+  //function to get exercise object (for Favorites and Info)
+  const getExerciseByIdObject = async (id) => {
+    try {
+      const individualExercise = await fetchExerciseById(id)
+      console.log("Exercise fetched and returned:", individualExercise); 
+      setSelectedExercise(individualExercise)
+     
+      
+    }
+    catch (error) {
+      console.error("Error fetching exercise by ID:", error);
+      }
+    }
+
+    const addToFavorites = () => {
+      setFavorites((prevFavorites) => [...prevFavorites, selectedExercise])
+      console.log("added to favorites:", favorites)
+    }
+
 
 const value = {
   exercises,
+  getExerciseByIdObject,
+  addToFavorites,
+  selectedExercise,
   allExercises,
   loading,
   error,

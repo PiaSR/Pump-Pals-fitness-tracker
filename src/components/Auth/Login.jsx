@@ -21,6 +21,7 @@ export default function Login () {
 		try {
 			setLoading(true)
 			await login(data.email, data.password)
+			alert("login was successful!")
 			console.log("login successful")
 			navigate("/")
 		} catch (error) {
