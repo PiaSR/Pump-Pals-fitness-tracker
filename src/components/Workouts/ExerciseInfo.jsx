@@ -1,26 +1,34 @@
-import React, { useState } from 'react'
+import React, { useCallback } from 'react'
 import { MdArrowBackIos } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import { useExercise } from '../../contexts/exerciseContext';
 import BtnSetFavorite from '../Buttons/BtnSetFavorite';
+import {debounce} from "lodash";
 
 
 
 const ExerciseInfo = ({exercise}) => {
-	const {addToFavorites} = useExercise()
+	const {addToFavorites,favorites, notes, setNotes, addNotesToExerciseInfo} = useExercise()
 
 	const navigate = useNavigate()
-	const [notes, setNotes] = useState('')
+	
 
 	const handleClickBackArrow = () => {
 		navigate(-1)
 	}
 
-	const handleNotesChange = (e) => [
-		setNotes(e.target.value)
-	]
+	const debouncedNotes = useCallback (
+		debounce((exercise, notes) => {
+			addNotesToExerciseInfo(exercise, notes)
+		},300), []
+	)
 
-	
+	const handleNotesChange = (e) => {
+		const updatedNotes = e.target.value;
+		setNotes(updatedNotes),
+		debouncedNotes(exercise.id, updatedNotes)
+}
+ 
 
 	if (!exercise) return null;
 
@@ -31,15 +39,21 @@ const ExerciseInfo = ({exercise}) => {
 					<MdArrowBackIos onClick={handleClickBackArrow} />
 					<div className='flex flex-col items-center'>
 						<h2 className='text-gray-800 text-xl font-bold'>{exercise.name}</h2>
-						<p className='text-gray-500 text-sm '>{exercise.equipment.charAt(0).toUpperCase() + exercise.equipment.slice(1)}</p>
+						{exercise.equipment ?
+						(<p className='text-gray-500 text-sm '>{exercise.equipment.charAt(0).toUpperCase() + exercise.equipment.slice(1)}</p>)
+						:( <p>Equipment: none</p> )
+						}
 					</div>
-					<BtnSetFavorite onClick={()=> addToFavorites()}	/>
+					<BtnSetFavorite onClick={()=> addToFavorites(exercise)}	/>
 				</div>
 
 
 			{/* INSTRUCTIONS */}
 				<div className='text-gray-800 overflow-scroll sm:overflow-visible mt-6 sm:mt-10'>
 					<h4 className='font-bold mb-4'>Instructions</h4>
+
+				{exercise.instructions && exercise.instructions.length > 0
+				? (
 				<ol className='list-decimal ml-6 text-sm'>
 				{exercise.instructions.map((step, index) => {
 				return <li key={index}>
@@ -47,7 +61,11 @@ const ExerciseInfo = ({exercise}) => {
 					</li>
 					})
 				}
-				</ol>
+				</ol>)
+				: (
+					<p>none</p>
+				)
+}
 				</div>
 
 

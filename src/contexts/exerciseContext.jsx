@@ -2,6 +2,8 @@
 import React, { createContext, useState, useContext, useCallback } from 'react';
 import { db } from "/src/firebase/firebase.js" 
 import { doc, setDoc } from "firebase/firestore";
+import {ref, update } from "firebase/database";
+import { useAuth } from './authContexts/authContext';
 import { Link, useNavigate } from "react-router-dom"
 
 
@@ -15,7 +17,9 @@ export function ExerciseProvider({ children }) {
   const [exercises, setExercises] = useState([]);
   const [allExercises, setAllExercises] = useState([]); //to cache full exercise list
   const [selectedExercise, setSelectedExercise] = useState(null);
-  const [favorites, setFavorites] = useState([])
+  const [favorites, setFavorites] = useState([]);
+  const [notes, setNotes] = useState('')
+  const {currentUser} = useAuth()
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -75,16 +79,17 @@ export function ExerciseProvider({ children }) {
     if (data) {
       const individualExercise = ({
         id: data.id,
-        name: data.name,
-        normalizedName: data.name.replaceAll(/[-_]/g, "").toLowerCase().trim(),
-        category: data.category,
-        equipment: data.equipment,
+        name: data.name || "Unknown Name",
+        normalizedName: (data.name || "").replaceAll(/[-_]/g, "").toLowerCase().trim() ,
+        category: data.category || "",
+        equipment: data.equipment || "",
         instructions: data.instructions || [],
-        level: data.level,
+        level: data.level || "",
         primaryMuscles: data.primaryMuscles || [],
         secondaryMuscles: data.secondaryMuscles || [],
         maxReps: 0,
-        maxWeight: 0
+        maxWeight: 0,
+        addedNotes: ''
       });
    
       return individualExercise
@@ -133,7 +138,8 @@ export function ExerciseProvider({ children }) {
             primaryMuscles: exercise.primaryMuscles || [],
             secondaryMuscles: exercise.secondaryMuscles || [],
             maxReps: 0,
-            maxWeight: 0
+            maxWeight: 0,
+            addedNotes: ''
           }));
           setExercises(formattedExercises); // Set filtered exercises
         }
@@ -142,10 +148,13 @@ export function ExerciseProvider({ children }) {
   //function to get exercise object (for Favorites and Info)
   const getExerciseByIdObject = async (id) => {
     try {
-      const individualExercise = await fetchExerciseById(id)
-      console.log("Exercise fetched and returned:", individualExercise); 
-      setSelectedExercise(individualExercise)
-     
+      const individExercise = await fetchExerciseById(id)
+      console.log("Exercise fetched and returned:", individExercise); 
+      if(individExercise) {
+        setSelectedExercise(individExercise)
+        console.log('selected exercise:', selectedExercise)
+        return individExercise
+      }
       
     }
     catch (error) {
@@ -153,16 +162,82 @@ export function ExerciseProvider({ children }) {
       }
     }
 
-    const addToFavorites = () => {
-      setFavorites((prevFavorites) => [...prevFavorites, selectedExercise])
-      console.log("added to favorites:", favorites)
+    async function addToFavorites(selectedExercise) {
+      if (!selectedExercise || !currentUser) {
+        console.error("Exercise or current user not found.");
+        return;
+      }
+    
+      try {
+        const exerciseDocRef = doc(db, "favorites", `${currentUser.uid}_${selectedExercise.id}`); // Unique doc for each exercise
+    
+        const isFavorite = favorites.some((fav) => fav.id === selectedExercise.id);
+
+        if (isFavorite) {
+          //Remove from favorites list when clicking heart again
+          await setDoc (exerciseDocRef, {}, {merge:true});
+          setFavorites((prevFavorites) => {
+            prevFavorites.filter((favorite) => favorite.id !== selectedExercise.id)
+          })
+          console.log("Exercise removed from favorites:", selectedExercise);
+        }
+
+        // Add exercise to Davorites in firestore db
+        await setDoc(exerciseDocRef, {
+          ...selectedExercise,
+          uid: currentUser.uid, // Add user-specific data
+          addedAt: new Date(),
+        });
+    
+        // Update local favorites state
+        setFavorites((prevFavorites) => [...prevFavorites, selectedExercise]);
+    
+        console.log("Exercise added to favorites:", selectedExercise);
+
+      } catch (err) {
+        console.error("Error toggling favorites:", err);
+      }
     }
+
+
+    function addNotesToExerciseInfo (selectedExercise, notes) {
+      if(!currentUser){
+        console.error("User not logged in");
+        return;
+      }
+
+      try{
+      setSelectedExercise((prevSelected) => {
+        if(!prevSelected || prevSelected !== selectedExercise) return prevSelected
+        return {...prevSelected, addedNotes: notes}
+      })
+
+      const exerciseRef = ref(db, `favorites/${currentUser.uid}_${selectedExercise.id}` );
+      update(exerciseRef, {addedNotes: notes})
+        .then(()=> {
+          console.log("Notes updates successfully in Firebase")
+        })
+        .catch((error)=> {
+          console.error("Error updating notes in Firebase:", error)
+        })
+      }
+      catch (error) {
+        console.error("Error in function addNotesToExerciseInfo:", error)
+      }
+     
+    
+    }
+    
 
 
 const value = {
   exercises,
+  favorites,
+  notes,
+  setNotes,
   getExerciseByIdObject,
   addToFavorites,
+  addNotesToExerciseInfo,
   selectedExercise,
   allExercises,
   loading,
