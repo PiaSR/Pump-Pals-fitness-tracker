@@ -19,8 +19,10 @@ const ExerciseInfo = ({exercise}) => {
 
 	const debouncedNotes = useCallback (
 		debounce((exercise, notes) => {
+			if(exercise && exercise.id) {
 			addNotesToExerciseInfo(exercise, notes)
-		},300), []
+			}
+		},300), [addNotesToExerciseInfo]
 	)
 
 	const handleNotesChange = (e) => {
@@ -44,7 +46,7 @@ const ExerciseInfo = ({exercise}) => {
 						:( <p>Equipment: none</p> )
 						}
 					</div>
-					<BtnSetFavorite onClick={()=> addToFavorites(exercise)}	/>
+					<BtnSetFavorite onClick={()=> addToFavorites(exercise)}	exercise={exercise}/>
 				</div>
 
 

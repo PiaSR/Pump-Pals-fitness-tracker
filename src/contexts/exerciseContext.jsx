@@ -1,8 +1,7 @@
 
-import React, { createContext, useState, useContext, useCallback } from 'react';
+import React, { createContext, useState, useContext, useCallback , useEffect} from 'react';
 import { db } from "/src/firebase/firebase.js" 
-import { doc, setDoc } from "firebase/firestore";
-import {ref, update } from "firebase/database";
+import { doc, setDoc, deleteDoc, updateDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { useAuth } from './authContexts/authContext';
 import { Link, useNavigate } from "react-router-dom"
 
@@ -162,26 +161,51 @@ export function ExerciseProvider({ children }) {
       }
     }
 
+
+    useEffect(() => {
+      if (currentUser) {
+        // Fetch user's favorite exercises from Firestore when they are logged in
+        const fetchFavorites = async () => {
+          const favoritesRef = collection(db, "favorites");
+          
+          const querySnapshot = await getDocs(favoritesRef);
+          const favoriteExercises = querySnapshot.docs
+          .filter(doc => doc.id.split('_')[0] === currentUser.uid)  // Check if the uid in docId matches
+          .map(doc => doc.data());
+          setFavorites(favoriteExercises);
+        };
+        fetchFavorites();
+        console.log('user favorites are:', favorites)
+      }
+    }, [currentUser]); 
+
+
+
     async function addToFavorites(selectedExercise) {
       if (!selectedExercise || !currentUser) {
         console.error("Exercise or current user not found.");
         return;
       }
+
     
       try {
-        const exerciseDocRef = doc(db, "favorites", `${currentUser.uid}_${selectedExercise.id}`); // Unique doc for each exercise
+        const docId = `${currentUser.uid}_${selectedExercise.id}`;
+
+        const isFavorite = favorites.some((fav) => fav.id === selectedExercise.id  );
+       
+
+        const exerciseDocRef = doc(db, "favorites", docId); // Unique doc for each exercise
     
-        const isFavorite = favorites.some((fav) => fav.id === selectedExercise.id);
 
         if (isFavorite) {
           //Remove from favorites list when clicking heart again
-          await setDoc (exerciseDocRef, {}, {merge:true});
-          setFavorites((prevFavorites) => {
-            prevFavorites.filter((favorite) => favorite.id !== selectedExercise.id)
-          })
+          await deleteDoc(exerciseDocRef);
+          
+          setFavorites((prevFavorites) => prevFavorites.filter((fav) => fav.id !== selectedExercise.id))
           console.log("Exercise removed from favorites:", selectedExercise);
         }
 
+        if(!isFavorite) {
         // Add exercise to Davorites in firestore db
         await setDoc(exerciseDocRef, {
           ...selectedExercise,
@@ -193,30 +217,34 @@ export function ExerciseProvider({ children }) {
         setFavorites((prevFavorites) => [...prevFavorites, selectedExercise]);
     
         console.log("Exercise added to favorites:", selectedExercise);
+      }
 
       } catch (err) {
         console.error("Error toggling favorites:", err);
       }
     }
 
+    useEffect(() => {
+      console.log('Favorites updated:', favorites);
+    }, [favorites]);
 
-    function addNotesToExerciseInfo (selectedExercise, notes) {
-      if(!currentUser){
-        console.error("User not logged in");
+    async function addNotesToExerciseInfo (selectedExercise, notes) {
+      if(!currentUser || !selectedExercise){
+        console.error("User not logged in or no exercise selected");
         return;
       }
 
       try{
+        const exerciseRef = doc(db, 'favorites', `${currentUser.uid}_${selectedExercise.id}` );
+        await updateDoc(exerciseRef, {addedNotes: notes})
+       console.log("Notes updates successfully in Firebase")
+      
       setSelectedExercise((prevSelected) => {
         if(!prevSelected || prevSelected !== selectedExercise) return prevSelected
         return {...prevSelected, addedNotes: notes}
       })
 
-      const exerciseRef = ref(db, `favorites/${currentUser.uid}_${selectedExercise.id}` );
-      update(exerciseRef, {addedNotes: notes})
-        .then(()=> {
-          console.log("Notes updates successfully in Firebase")
-        })
+      
         .catch((error)=> {
           console.error("Error updating notes in Firebase:", error)
         })
