@@ -1,7 +1,7 @@
 
 import React, { createContext, useState, useContext, useCallback , useEffect} from 'react';
 import { db } from "/src/firebase/firebase.js" 
-import { doc, setDoc, deleteDoc, updateDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { doc, setDoc, deleteDoc, updateDoc, collection,  getDocs } from "firebase/firestore";
 import { useAuth } from './authContexts/authContext';
 import { Link, useNavigate } from "react-router-dom"
 
@@ -19,6 +19,8 @@ export function ExerciseProvider({ children }) {
   const [favorites, setFavorites] = useState([]);
   const [notes, setNotes] = useState('')
   const {currentUser} = useAuth()
+
+  const [workoutStarted, setWorkoutStarted] = useState(false)
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -263,6 +265,8 @@ const value = {
   favorites,
   notes,
   setNotes,
+  workoutStarted,
+  setWorkoutStarted,
   getExerciseByIdObject,
   addToFavorites,
   addNotesToExerciseInfo,

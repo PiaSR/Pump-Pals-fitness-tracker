@@ -2,6 +2,8 @@ import React, {useState, useEffect, useCallback} from 'react'
 import { useExercise } from '/src/contexts/exerciseContext'
 import { IoMdSearch } from "react-icons/io";
 import { FaCirclePlus } from "react-icons/fa6";
+import { FaMinusCircle } from "react-icons/fa";
+
 
 
 import DropdownMuscleGroups from '/src/components/Workouts/dropdowns/DropdownMuscleGroups.jsx';
@@ -10,11 +12,12 @@ import BtnFavoriteList from '/src/components/Buttons/BtnFavoriteList.jsx';
 import { useNavigate } from 'react-router-dom';
 
 
-const WorkoutSearch = () => {
-	const {exercises,selectedExercise, fetchAllExercises,fetchExercisesByMuscle, fetchExercisesByEquipment, getExerciseByIdObject, loading, error} = useExercise();
+const WorkoutSearch = ({startNewWorkout, addedExerciseToWorkout, handleAddExercise, handleRemoveExercise}) => {
+	const {exercises , setWorkoutStarted, fetchAllExercises,fetchExercisesByMuscle, fetchExercisesByEquipment, getExerciseByIdObject, loading, error} = useExercise();
 	const [searchInput, setSearchInput] =useState("");
 	const [muscleGroup, setMuscleGroup] = useState("");
 	const [equipment, setEquipment] = useState("");
+	
 	const navigate = useNavigate()
 	
   
@@ -28,7 +31,18 @@ const WorkoutSearch = () => {
 	const handleSearchChange = (e) => {
 	  setSearchInput(e.target.value)
 	}
-  
+
+	const goToExerciseInfo = (id) => {
+		getExerciseByIdObject(id)
+		console.log("clicked on button, fetched data", id)
+		navigate("/information")
+	}
+
+
+	const handleCancelBtn = () => {
+		navigate('/')
+	}
+
 	const handleMuscleGroupChange = useCallback ( async (muscleGroup) => {
 	  setMuscleGroup(muscleGroup);
 	  try {
@@ -38,6 +52,8 @@ const WorkoutSearch = () => {
 	  }
 	  
 	}, []);
+
+
 
 	
   //only fetch from the /muscle endpoint (in handleMuscleGroupChange) if a muscle group gets selected in the dropdown
@@ -64,11 +80,7 @@ const WorkoutSearch = () => {
 	}, [equipment,handleEquipmentGroupChange ])
   
 
-	const goToExerciseInfo = (id) => {
-		getExerciseByIdObject(id)
-		console.log("clicked on button, fetched data", id)
-		navigate("/information")
-	}
+	
 
 
 
@@ -101,6 +113,7 @@ const WorkoutSearch = () => {
 	  }
   
 
+	 
 	
 	return (
 	<div className='flex flex-col justify-start items-center pb-5 w-[100dvw]  h-[100dvh] sm:w-[80dvw] md:w-[70dvw] lg:max-w-4xl sm:h-[90dvh] bg-bg-white bg-opacity-60 sm:rounded-3xl sm:m-3'>
@@ -163,8 +176,13 @@ const WorkoutSearch = () => {
 						
 					  <div className='grid grid-cols-[1fr_auto] items-center text-sm text-gray-700 px-7 py-6  '>
 					  <div className='truncate' onClick={()=>goToExerciseInfo(exercise.id)} >{exercise.name} </div> 
-					  
-					  <FaCirclePlus className='text-xl text-gray-700'  />
+					  {addedExerciseToWorkout.some((e)=> e.id === exercise.id) ? (
+							<FaMinusCircle className='text-2xl text-red-400' onClick={()=> handleRemoveExercise(exercise.id)}/>
+					  ) : (
+							<FaCirclePlus className='text-2xl text-gray-700' onClick={()=>handleAddExercise(exercise.id)} />
+					  )}
+
+
 					  </div>
 					  <hr className='border-solid border-gray-200 w-full '/>
 					</li>
@@ -177,6 +195,18 @@ const WorkoutSearch = () => {
  			 
 			  
 			</div>
+			
+				{addedExerciseToWorkout && addedExerciseToWorkout.length>0 && <button 
+				className='btn-secondary w-[85%] text-sm justify-self-end mt-8'
+				onClick={startNewWorkout}>
+					Add {addedExerciseToWorkout.length} exercise{addedExerciseToWorkout.length>1 ? "s" : ""}
+				</button>}
+
+				<button className='btn-secondary w-[85%] text-sm justify-self-end mt-8 bg-red-400' 
+				onClick={handleCancelBtn}
+				>Cancel
+				</button>
+			
 		
 	</div>
 	 

@@ -8,6 +8,7 @@ export function StartingScreenHomepage ({onClick}) {
 const {currentUser} = useAuth()
 
 
+
   return (
 	<div className='flex items-center justify-center flex-col max-w-md bg-white bg-opacity-20 p-8 rounded-3xl'>
     <h3 className='text-white'>Hello, {currentUser?.displayName}!</h3>
