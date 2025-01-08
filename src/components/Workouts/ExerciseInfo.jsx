@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { MdArrowBackIos } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
-import { useExercise } from '../../contexts/exerciseContext';
+import { useExercise } from '../../contexts/workoutContexts/exerciseContext';
 import BtnSetFavorite from '../Buttons/BtnSetFavorite';
 import {debounce} from "lodash";
 

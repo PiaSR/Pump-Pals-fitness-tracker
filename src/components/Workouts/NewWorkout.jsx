@@ -1,13 +1,22 @@
 import React from 'react'
-import { useExercise } from '../../contexts/exerciseContext'
+import { useWorkout } from '../../contexts/workoutContexts/workoutContext'
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import ExerciseSetsContainer from '/src/components/Workouts/ExerciseSetsContainer.jsx'
 
 
 
-
-const NewWorkout = ({addedExerciseToWorkout, startNewWorkout}) => {
+const NewWorkout = () => {
 	
+	const {workoutStarted,
+		setWorkoutStarted,
+		addedExerciseIds,
+		setAddedExerciseIds,
+		addedExerciseObjects,
+		setAddedExerciseObjects,
+		handleAddExercise,
+		
+		handleRemoveExercise,
+		startNewWorkout} = useWorkout()
 
   return (
 	<div className='flex justify-center items-center py-6 w-[100dvw]  h-[100dvh] sm:w-[80dvw] md:w-[70dvw] lg:max-w-4xl sm:h-[90dvh] bg-bg-white bg-opacity-60 sm:rounded-3xl '>
@@ -22,17 +31,7 @@ const NewWorkout = ({addedExerciseToWorkout, startNewWorkout}) => {
 
 
 			{/* exercise container */}
-			<div className='flex flex-col border border-solid border-gray-400 rounded-md p-5'>
-				<div className='flex justify-between'>
-					<div className='flex flex-col'>
-						<h5 className='text-md text-gray-600 font-semibold'>exercise name</h5>
-						<p className='text-sm text-gray-500'>equipment</p>
-					</div>
-					<BsThreeDotsVertical className='text-gray-600'/>
-				</div>
-
-
-			</div>
+			<ExerciseSetsContainer addedExerciseObjects={addedExerciseObjects} />
 
 		</div>
 	</div>

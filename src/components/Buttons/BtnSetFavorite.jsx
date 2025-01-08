@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react'
 import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
-import { useExercise } from "/src/contexts/exerciseContext"
+import { useExercise } from "/src/contexts/workoutContexts/exerciseContext"
 
 
 

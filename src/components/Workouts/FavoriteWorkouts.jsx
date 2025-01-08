@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { useExercise } from '../../contexts/exerciseContext';
+import { useExercise } from '../../contexts/workoutContexts/exerciseContext';
 import { MdArrowBackIos } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import { FaCirclePlus } from "react-icons/fa6";

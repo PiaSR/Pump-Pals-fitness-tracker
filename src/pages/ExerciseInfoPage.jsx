@@ -1,6 +1,6 @@
 import React from 'react'
 import ExerciseInfo from '../components/Workouts/ExerciseInfo'
-import { useExercise } from '../contexts/exerciseContext'
+import { useExercise } from '../contexts/workoutContexts/exerciseContext'
 
 const ExerciseInfoPage = ( ) => {
 	const {selectedExercise} = useExercise()

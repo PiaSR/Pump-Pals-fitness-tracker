@@ -2,7 +2,7 @@
 import React, { createContext, useState, useContext, useCallback , useEffect} from 'react';
 import { db } from "/src/firebase/firebase.js" 
 import { doc, setDoc, deleteDoc, updateDoc, collection,  getDocs } from "firebase/firestore";
-import { useAuth } from './authContexts/authContext';
+import { useAuth } from '../authContexts/authContext';
 import { Link, useNavigate } from "react-router-dom"
 
 
@@ -162,11 +162,11 @@ export function ExerciseProvider({ children }) {
       console.error("Error fetching exercise by ID:", error);
       }
     }
+    
 
-
+  // Fetch user's favorite exercises from Firestore when they are logged in
     useEffect(() => {
       if (currentUser) {
-        // Fetch user's favorite exercises from Firestore when they are logged in
         const fetchFavorites = async () => {
           const favoritesRef = collection(db, "favorites");
           

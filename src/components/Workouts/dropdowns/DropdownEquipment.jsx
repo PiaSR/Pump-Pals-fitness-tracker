@@ -1,6 +1,6 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
-import { useExercise } from '/src/contexts/exerciseContext';
+import { useExercise } from '/src/contexts//workoutContexts/exerciseContext';
 
 export default function DropdownMuscleGroups({equipment, setEquipment}) {
   // const { fetchExercisesByEquipment, loading, error } = useExercise();

@@ -1,5 +1,7 @@
 import React, {useState, useEffect, useCallback} from 'react'
-import { useExercise } from '/src/contexts/exerciseContext'
+import { useExercise } from '/src/contexts/workoutContexts/exerciseContext'
+import { useWorkout } from '/src/contexts/workoutContexts/workoutContext'
+
 import { IoMdSearch } from "react-icons/io";
 import { FaCirclePlus } from "react-icons/fa6";
 import { FaMinusCircle } from "react-icons/fa";
@@ -12,8 +14,10 @@ import BtnFavoriteList from '/src/components/Buttons/BtnFavoriteList.jsx';
 import { useNavigate } from 'react-router-dom';
 
 
-const WorkoutSearch = ({startNewWorkout, addedExerciseToWorkout, handleAddExercise, handleRemoveExercise}) => {
-	const {exercises , setWorkoutStarted, fetchAllExercises,fetchExercisesByMuscle, fetchExercisesByEquipment, getExerciseByIdObject, loading, error} = useExercise();
+const WorkoutSearch = () => {
+
+	const {exercises , fetchAllExercises,fetchExercisesByMuscle, fetchExercisesByEquipment, getExerciseByIdObject, loading, error} = useExercise();
+	const {addedExerciseIds,handleAddExercise,handleRemoveExercise,startNewWorkout} = useWorkout()
 	const [searchInput, setSearchInput] =useState("");
 	const [muscleGroup, setMuscleGroup] = useState("");
 	const [equipment, setEquipment] = useState("");
@@ -176,10 +180,10 @@ const WorkoutSearch = ({startNewWorkout, addedExerciseToWorkout, handleAddExerci
 						
 					  <div className='grid grid-cols-[1fr_auto] items-center text-sm text-gray-700 px-7 py-6  '>
 					  <div className='truncate' onClick={()=>goToExerciseInfo(exercise.id)} >{exercise.name} </div> 
-					  {addedExerciseToWorkout.some((e)=> e.id === exercise.id) ? (
-							<FaMinusCircle className='text-2xl text-red-400' onClick={()=> handleRemoveExercise(exercise.id)}/>
+					  {addedExerciseIds.some((exId)=> exId === exercise.id) ? (
+							<FaMinusCircle className='text-2xl text-red-400 cursor-pointer' onClick={()=> handleRemoveExercise(exercise.id)}/>
 					  ) : (
-							<FaCirclePlus className='text-2xl text-gray-700' onClick={()=>handleAddExercise(exercise.id)} />
+							<FaCirclePlus className='text-2xl text-gray-700 cursor-pointer' onClick={()=>handleAddExercise(exercise.id)} />
 					  )}
 
 
@@ -196,10 +200,10 @@ const WorkoutSearch = ({startNewWorkout, addedExerciseToWorkout, handleAddExerci
 			  
 			</div>
 			
-				{addedExerciseToWorkout && addedExerciseToWorkout.length>0 && <button 
+				{addedExerciseIds && addedExerciseIds.length>0 && <button 
 				className='btn-secondary w-[85%] text-sm justify-self-end mt-8'
 				onClick={startNewWorkout}>
-					Add {addedExerciseToWorkout.length} exercise{addedExerciseToWorkout.length>1 ? "s" : ""}
+					Add {addedExerciseIds.length} exercise{addedExerciseIds.length>1 ? "s" : ""}
 				</button>}
 
 				<button className='btn-secondary w-[85%] text-sm justify-self-end mt-8 bg-red-400' 
