@@ -1,5 +1,9 @@
 import React, {createContext,useContext, useState, useCallback, useEffect} from 'react'
+import { db } from "/src/firebase/firebase.js" 
+import { doc, setDoc, deleteDoc, updateDoc, collection,  getDocs } from "firebase/firestore";
 import { useExercise } from './exerciseContext';
+import { useAuth } from '../authContexts/authContext';
+
 
 
 const WorkoutContext = createContext();
@@ -11,9 +15,10 @@ export function useWorkout() {
 
 export function WorkoutProvider({ children }) {
 	const { fetchExerciseById } = useExercise(); 
-	const  [workoutStarted, setWorkoutStarted] = useState(false)
-   const [addedExerciseIds, setAddedExerciseIds] =useState([]) // For storing Ids
-   const [addedExerciseObjects, setAddedExerciseObjects] = useState([]); // For storing full objects
+	const {currentUser} = useAuth()
+	const [workoutStarted, setWorkoutStarted] = useState(false)
+   	const [addedExerciseIds, setAddedExerciseIds] =useState([]) // For storing Ids
+   	const [addedExerciseObjects, setAddedExerciseObjects] = useState([]); // For storing full objects
 
 
     const startNewWorkout = useCallback(() => {
@@ -48,6 +53,7 @@ export function WorkoutProvider({ children }) {
           return;
         }
         setAddedExerciseObjects(exerciseObjects);
+		addWorkoutToUserDb(exerciseObjects)
       
       } catch (error) {
         console.log("error fetchin exercise objects:", error)
@@ -60,6 +66,24 @@ export function WorkoutProvider({ children }) {
       console.log("removed exercises:", addedExerciseIds)
     }
 
+	async function addWorkoutToUserDb (workoutObjects) {
+    
+		try {
+			
+			const userRef = doc(collection(db, `users/${currentUser.uid}/workouts`) );
+			await setDoc(userRef, {
+				...workoutObjects,
+				workoutTitle: 'New Workout',
+				addedAt: new Date(),
+			  });
+			  console.log('workout added to db:', workoutObjects, currentUser.uid)
+		} catch (error){
+			console.log("error adding workout to db:", error)
+		}
+
+	}
+
+
 	const value = {
 		workoutStarted,
 		setWorkoutStarted,
@@ -70,11 +94,11 @@ export function WorkoutProvider({ children }) {
 		handleAddExercise,
 		getExerciseObjects,
 		handleRemoveExercise,
-		startNewWorkout
-
-
+		startNewWorkout,
+		addWorkoutToUserDb
 
 	}
+
 	return (
 		<WorkoutContext.Provider value={value}>
 		  {children}

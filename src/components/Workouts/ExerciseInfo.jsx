@@ -3,12 +3,13 @@ import { MdArrowBackIos } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import { useExercise } from '../../contexts/workoutContexts/exerciseContext';
 import BtnSetFavorite from '../Buttons/BtnSetFavorite';
-import {debounce} from "lodash";
+
+import {ExerciseNotes} from '/src/components/Workouts/ExerciseNotes'
 
 
 
 const ExerciseInfo = ({exercise}) => {
-	const {addToFavorites,favorites, notes, setNotes, addNotesToExerciseInfo} = useExercise()
+	const {addToFavorites,favorites} = useExercise()
 
 	const navigate = useNavigate()
 	
@@ -17,19 +18,7 @@ const ExerciseInfo = ({exercise}) => {
 		navigate(-1)
 	}
 
-	const debouncedNotes = useCallback (
-		debounce((exercise, notes) => {
-			if(exercise && exercise.id) {
-			addNotesToExerciseInfo(exercise, notes)
-			}
-		},300), [addNotesToExerciseInfo]
-	)
-
-	const handleNotesChange = (e) => {
-		const updatedNotes = e.target.value;
-		setNotes(updatedNotes),
-		debouncedNotes(exercise.id, updatedNotes)
-}
+	
  
 
 	if (!exercise) return null;
@@ -71,13 +60,14 @@ const ExerciseInfo = ({exercise}) => {
 				</div>
 
 
-			{/* NOTES SECTION */}
+			{/* NOTES SECTION - ONLY SHOW WHEN EXERCISE IS IN FAVORITES (due to db storage)*/}
+			{favorites.some((fav) => fav.id === exercise.id) && 
 				<div className='w-full min-h-[20%] md:h-[40%] mt-7 pb-4 self-end'>
 				<h4 className='font-bold mb-4'>Notes</h4>
-				<textarea className='w-full h-full p-3 text-sm rounded-lg bg-bg-white bg-opacity-70' onChange={handleNotesChange}
-				value={notes}/>
+				<ExerciseNotes exercise={exercise} />
+				
 				</div>
-			
+}
 			
 		</div>
 	</div>

@@ -23,7 +23,7 @@ const NewWorkout = () => {
 		
 		<div className='flex flex-col w-9/12 h-full sm:h-[90%] p-4  '>
 		{/* header */}
-			<div className='flex flex-col '>
+			<div className='flex flex-col mb-10 '>
 			<MdOutlineKeyboardArrowDown onClick={()=> startNewWorkout()} className='text-3xl'/>
 
 			<h3 className=' text-2xl justify-self-center mt-6'>New Workout</h3>

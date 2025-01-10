@@ -17,7 +17,7 @@ export function ExerciseProvider({ children }) {
   const [allExercises, setAllExercises] = useState([]); //to cache full exercise list
   const [selectedExercise, setSelectedExercise] = useState(null);
   const [favorites, setFavorites] = useState([]);
-  const [notes, setNotes] = useState('')
+  
   const {currentUser} = useAuth()
 
   const [workoutStarted, setWorkoutStarted] = useState(false)
@@ -168,9 +168,9 @@ export function ExerciseProvider({ children }) {
     useEffect(() => {
       if (currentUser) {
         const fetchFavorites = async () => {
-          const favoritesRef = collection(db, "favorites");
+          const userFavoritesRef = collection(db, `users/${currentUser.uid}/favorites`);
           
-          const querySnapshot = await getDocs(favoritesRef);
+          const querySnapshot = await getDocs(userFavoritesRef);
           const favoriteExercises = querySnapshot.docs
           .filter(doc => doc.id.split('_')[0] === currentUser.uid)  // Check if the uid in docId matches
           .map(doc => doc.data());
@@ -189,87 +189,52 @@ export function ExerciseProvider({ children }) {
         return;
       }
 
-    
       try {
-        const docId = `${currentUser.uid}_${selectedExercise.id}`;
+        
 
         const isFavorite = favorites.some((fav) => fav.id === selectedExercise.id  );
-       
 
-        const exerciseDocRef = doc(db, "favorites", docId); // Unique doc for each exercise
-    
+        const exerciseDocId = `${selectedExercise.id}`;
+        const exerciseRef = doc(db, `users/${currentUser.uid}/favorites/${exerciseDocId}`); //access collection within user
 
         if (isFavorite) {
           //Remove from favorites list when clicking heart again
-          await deleteDoc(exerciseDocRef);
+          await deleteDoc(exerciseRef);
           
           setFavorites((prevFavorites) => prevFavorites.filter((fav) => fav.id !== selectedExercise.id))
           console.log("Exercise removed from favorites:", selectedExercise);
         }
 
-        if(!isFavorite) {
-        // Add exercise to Davorites in firestore db
-        await setDoc(exerciseDocRef, {
-          ...selectedExercise,
-          uid: currentUser.uid, // Add user-specific data
-          addedAt: new Date(),
-        });
+        else {
+        // Add exercise to Favorites in firestore db (under users)
+        
+              await setDoc(exerciseRef, {
+                ...selectedExercise,
+                addedAt: new Date(),
+              });
+              // Update local favorites state
+              setFavorites((prevFavorites) => [...prevFavorites, selectedExercise]);
+          
+              console.log("Exercise added to favorites:", selectedExercise);
+            }
+
+            } catch (err) {
+              console.error("Error toggling favorites:", err);
+            }
+          }
+
+  
     
-        // Update local favorites state
-        setFavorites((prevFavorites) => [...prevFavorites, selectedExercise]);
-    
-        console.log("Exercise added to favorites:", selectedExercise);
-      }
-
-      } catch (err) {
-        console.error("Error toggling favorites:", err);
-      }
-    }
-
-    useEffect(() => {
-      console.log('Favorites updated:', favorites);
-    }, [favorites]);
-
-    async function addNotesToExerciseInfo (selectedExercise, notes) {
-      if(!currentUser || !selectedExercise){
-        console.error("User not logged in or no exercise selected");
-        return;
-      }
-
-      try{
-        const exerciseRef = doc(db, 'favorites', `${currentUser.uid}_${selectedExercise.id}` );
-        await updateDoc(exerciseRef, {addedNotes: notes})
-       console.log("Notes updates successfully in Firebase")
-      
-      setSelectedExercise((prevSelected) => {
-        if(!prevSelected || prevSelected !== selectedExercise) return prevSelected
-        return {...prevSelected, addedNotes: notes}
-      })
-
-      
-        .catch((error)=> {
-          console.error("Error updating notes in Firebase:", error)
-        })
-      }
-      catch (error) {
-        console.error("Error in function addNotesToExerciseInfo:", error)
-      }
-     
-    
-    }
     
 
 
 const value = {
   exercises,
   favorites,
-  notes,
-  setNotes,
   workoutStarted,
   setWorkoutStarted,
   getExerciseByIdObject,
   addToFavorites,
-  addNotesToExerciseInfo,
   selectedExercise,
   allExercises,
   loading,
