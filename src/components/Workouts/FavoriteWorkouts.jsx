@@ -3,11 +3,18 @@ import { useExercise } from '../../contexts/workoutContexts/exerciseContext';
 import { MdArrowBackIos } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import { FaCirclePlus } from "react-icons/fa6";
+import { FaMinusCircle } from "react-icons/fa";
+
+import { useWorkout } from '../../contexts/workoutContexts/workoutContext';
+import StartNewWorkoutBtn from '/src/components/Buttons/StartNewWorkoutBtn'
+
 
 
 const FavoriteWorkouts = () => {
 
   const { favorites, getExerciseByIdObject} = useExercise()
+  const {addedExerciseIds,handleAddExercise,handleRemoveExercise,startNewWorkout} = useWorkout()
+
   const navigate = useNavigate()
 	
 
@@ -33,7 +40,7 @@ const FavoriteWorkouts = () => {
       </div>
       
       
-      <div className='overflow-y-auto overflow-x-hidden flex mt-6' > 
+      <div className='overflow-y-auto overflow-x-hidden flex flex-col mt-6' > 
           
           {favorites && favorites.length > 0 
         ? (
@@ -45,11 +52,17 @@ const FavoriteWorkouts = () => {
               
                 <div className='grid grid-cols-[1fr_auto] items-center text-sm text-gray-700 px-7 py-6  '>
 					  <div className='truncate' onClick={()=>goToExerciseInfo(exercise.id)} >{exercise.name} </div> 
+            {addedExerciseIds.some((exId)=> exId === exercise.id) ? (
+							<FaMinusCircle className='text-2xl text-red-400 cursor-pointer' onClick={()=> handleRemoveExercise(exercise.id)}/>
+					  ) : (
+							<FaCirclePlus className='text-2xl text-gray-700 cursor-pointer' onClick={()=>handleAddExercise(exercise.id)} />
+					  )}
 					  
-					  <FaCirclePlus className='text-xl text-gray-700'  />
 					  </div>
 					  <hr className='border-solid border-gray-200 w-full '/>
                 </li>
+
+                
               
             )
             )}
@@ -62,7 +75,12 @@ const FavoriteWorkouts = () => {
           <p className='text-sm mt-5'>To add to your Favorites, go back to the workout list, go to an exercise, and click on the heart in the top right corner.</p>
           </div>
         )}
+      
+       {/* <div className='p-0 m-0'>  */}
+          <StartNewWorkoutBtn className="w-full" />
+          {/* </div> */}
     </div>
+    
     </div>
    
   

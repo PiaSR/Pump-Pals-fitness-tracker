@@ -9,7 +9,7 @@ import {ExerciseNotes} from '/src/components/Workouts/ExerciseNotes'
 
 
 const ExerciseInfo = ({exercise}) => {
-	const {addToFavorites,favorites} = useExercise()
+	const {addToFavorites,favorites, loading, error} = useExercise()
 
 	const navigate = useNavigate()
 	
@@ -18,10 +18,16 @@ const ExerciseInfo = ({exercise}) => {
 		navigate(-1)
 	}
 
-	
- 
+	if (!exercise) {
+		console.log("Error displaying exercise info - exercise not found", error)
+		return null;
+	}
 
-	if (!exercise) return null;
+	if (loading) {
+		return <p>Loading exercises...</p>;
+	  }
+	  
+	
 
   return (
 	<div className='flex flex-col items-center h-[100dvh] min-w-[320px] sm:min-w-[600px] py-12 xs:py-20 pb-4 sm:h-[90dvh] bg-bg-white bg-opacity-60 sm:rounded-3xl sm:m-3'>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { db } from '/src/firebase/firebase.js'; // Import Firebase config
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { useExercise } from '../../contexts/workoutContexts/exerciseContext';
 import { useAuth } from '../../contexts/authContexts/authContext';
 import {debounce} from "lodash";
@@ -15,9 +15,27 @@ export function ExerciseNotes({exercise}) {
 
 
 
-  useEffect(() => {
-    setNotes(selectedExercise.addedNotes || ''); // Reset notes if selected exercise changes
-  }, [selectedExercise]);
+
+  useEffect(()=> {
+	if(selectedExercise && currentUser) {
+		try{
+		const fetchNotes = async () => {
+			const exerciseDocId = `${selectedExercise.id}`;
+			const exerciseRef = doc(db, `users/${currentUser.uid}/favorites/${exerciseDocId}`);
+			const querySnapshot = await getDoc(exerciseRef);
+			if(querySnapshot.exists) {
+				const exerciseNotes = querySnapshot.data()
+				setNotes(exerciseNotes.addedNotes || '')
+			} else {
+				setNotes('')
+			}
+			
+		}
+		fetchNotes()
+	} catch {
+		console.log("Error fetching notes from firebase:", error)
+	}
+  }}, [selectedExercise, currentUser])
 
   // Automatically update notes in Firestore when the notes change
   const addNotesToExerciseInfo = async (exercise, notes) => {
@@ -27,7 +45,8 @@ export function ExerciseNotes({exercise}) {
     }
 
     try {
-      const exerciseRef = doc(db, `users/${currentUser.uid}/favorites/${exercise.id}`);
+		const exerciseDocId = `${exercise.id}`;
+      const exerciseRef = doc(db, `users/${currentUser.uid}/favorites/${exerciseDocId}`);
       await updateDoc(exerciseRef, { addedNotes: notes });
       console.log("Notes updated successfully in Firebase");
     } catch (error) {

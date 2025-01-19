@@ -11,6 +11,7 @@ import { FaMinusCircle } from "react-icons/fa";
 import DropdownMuscleGroups from '/src/components/Workouts/dropdowns/DropdownMuscleGroups.jsx';
 import DropdownEquipment from '/src/components/Workouts/dropdowns/DropdownEquipment';
 import BtnFavoriteList from '/src/components/Buttons/BtnFavoriteList.jsx';
+import StartNewWorkoutBtn from '/src/components/Buttons/StartNewWorkoutBtn'
 import { useNavigate } from 'react-router-dom';
 
 
@@ -200,11 +201,7 @@ const WorkoutSearch = () => {
 			  
 			</div>
 			
-				{addedExerciseIds && addedExerciseIds.length>0 && <button 
-				className='btn-secondary w-[85%] text-sm justify-self-end mt-8'
-				onClick={startNewWorkout}>
-					Add {addedExerciseIds.length} exercise{addedExerciseIds.length>1 ? "s" : ""}
-				</button>}
+				<StartNewWorkoutBtn className="w-[85%]" />
 
 				<button className='btn-secondary w-[85%] text-sm justify-self-end mt-8 bg-red-400' 
 				onClick={handleCancelBtn}

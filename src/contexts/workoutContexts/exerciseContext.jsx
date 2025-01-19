@@ -17,11 +17,8 @@ export function ExerciseProvider({ children }) {
   const [allExercises, setAllExercises] = useState([]); //to cache full exercise list
   const [selectedExercise, setSelectedExercise] = useState(null);
   const [favorites, setFavorites] = useState([]);
-  
   const {currentUser} = useAuth()
-
   const [workoutStarted, setWorkoutStarted] = useState(false)
-  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -172,16 +169,18 @@ export function ExerciseProvider({ children }) {
           
           const querySnapshot = await getDocs(userFavoritesRef);
           const favoriteExercises = querySnapshot.docs
-          .filter(doc => doc.id.split('_')[0] === currentUser.uid)  // Check if the uid in docId matches
           .map(doc => doc.data());
           setFavorites(favoriteExercises);
+          console.log('user favorites are:', favorites)
         };
         fetchFavorites();
-        console.log('user favorites are:', favorites)
+        
       }
     }, [currentUser]); 
 
-
+useEffect(()=> {
+  console.log("current favorites are:", favorites)
+},[])
 
     async function addToFavorites(selectedExercise) {
       if (!selectedExercise || !currentUser) {
@@ -190,20 +189,19 @@ export function ExerciseProvider({ children }) {
       }
 
       try {
-        
+            const isFavorite = favorites.some((fav) => fav.id === selectedExercise.id  );
+            console.log("current favorites:", favorites)
 
-        const isFavorite = favorites.some((fav) => fav.id === selectedExercise.id  );
+            const exerciseDocId = `${selectedExercise.id}`;
+            const exerciseRef = doc(db, `users/${currentUser.uid}/favorites/${exerciseDocId}`); //access collection within user
 
-        const exerciseDocId = `${selectedExercise.id}`;
-        const exerciseRef = doc(db, `users/${currentUser.uid}/favorites/${exerciseDocId}`); //access collection within user
-
-        if (isFavorite) {
-          //Remove from favorites list when clicking heart again
-          await deleteDoc(exerciseRef);
-          
-          setFavorites((prevFavorites) => prevFavorites.filter((fav) => fav.id !== selectedExercise.id))
-          console.log("Exercise removed from favorites:", selectedExercise);
-        }
+            if (isFavorite) {
+              //Remove from favorites list when clicking heart again
+              await deleteDoc(exerciseRef);
+              
+              setFavorites((prevFavorites) => prevFavorites.filter((fav) => fav.id !== selectedExercise.id))
+              console.log("Exercise removed from favorites:", selectedExercise);
+            }
 
         else {
         // Add exercise to Favorites in firestore db (under users)
@@ -222,10 +220,6 @@ export function ExerciseProvider({ children }) {
               console.error("Error toggling favorites:", err);
             }
           }
-
-  
-    
-    
 
 
 const value = {
