@@ -24,6 +24,9 @@ const ExerciseSetsContainer = () => {
 			<BsThreeDotsVertical className='text-gray-600'/>
 			
 		</div>
+		<div>
+			<div className='w-8 h-8 flex justify-center items-center text-gray-500 rounded-full border-solid border border-gray-500 p-2'>{}</div>
+		</div>
 	</div>
 	))}
 	</div>
