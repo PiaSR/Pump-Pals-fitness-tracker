@@ -43,23 +43,54 @@ export function WorkoutProvider({ children }) {
         console.log("added exercises (just id):", addedExerciseIds)
     })}
       
-    async function getExerciseObjects (){
-      try {
-        const exerciseObjects = await Promise.all(
-          addedExerciseIds.map((id)=>fetchExerciseById(id))
-        )
-        if (!exerciseObjects || exerciseObjects.lenght === 0) {
-          console.error("Failed to fetch exercises.");
-          return;
-        }
-        setAddedExerciseObjects(exerciseObjects);
-		addWorkoutToUserDb(exerciseObjects)
-      
-      } catch (error) {
-        console.log("error fetchin exercise objects:", error)
-      } 
-    
-    }
+    async function getExerciseObjects() {
+		try {
+		  // Fetch exercise objects based on addedExerciseIds
+		  const exerciseObjects = await Promise.all(
+			addedExerciseIds.map((id) => fetchExerciseById(id))
+		  );
+	  
+		  if (!exerciseObjects || exerciseObjects.length === 0) {
+			console.error("Failed to fetch exercises.");
+			return;
+		  }
+	  
+		  // Fetch the user's last workout to get the max reps for each exercise
+		  const workoutsCollection = collection(db, `users/${currentUser.uid}/workouts`);
+		  const workoutSnapshot = await getDocs(workoutsCollection);
+	  
+		  let lastWorkout = null;
+	  
+		  // Find the most recent workout (order by `addedAt`)
+		  workoutSnapshot.forEach((doc) => {
+			const workout = doc.data();
+			if (!lastWorkout || workout.addedAt.toMillis() > lastWorkout.addedAt.toMillis()) {
+			  lastWorkout = workout;
+			}
+		  });
+	  
+		  // If there's a last workout, check for max reps for each exercise
+		  const updatedExerciseObjects = exerciseObjects.map((exercise) => {
+			const matchingExercise = lastWorkout?.exercises?.find(
+			  (ex) => ex.id === exercise.id
+			);
+	  
+			return {
+			  ...exercise,
+			  maxReps: matchingExercise ? matchingExercise.reps : null, // Set max reps if found
+			  maxWeight: matchingExercise ? matchingExercise.weight : null, // Set max weight if found
+			};
+		  });
+	  
+		  setAddedExerciseObjects(updatedExerciseObjects);
+		  console.log("Updated exercise objects with max reps:", updatedExerciseObjects);
+	  
+		  // Add workout to the database
+		  addWorkoutToUserDb(updatedExerciseObjects);
+		} catch (error) {
+		  console.error("Error fetching exercise objects:", error);
+		}
+	  }
   
     const handleRemoveExercise = (exerciseId) => {
       addedExerciseIds((prev)=> prev.filter((exId)=> exId !== exerciseId))
@@ -72,9 +103,14 @@ export function WorkoutProvider({ children }) {
 			
 			const userRef = doc(collection(db, `users/${currentUser.uid}/workouts`) );
 			await setDoc(userRef, {
-				...workoutObjects,
+				
 				workoutTitle: 'New Workout',
 				addedAt: new Date(),
+				exercises: workoutObjects.map((exercise) => ({
+					...exercise, 
+					maxReps: exercise.maxReps || 0, // Add or overwrite the maxReps property
+					maxWeight: exercise.maxWeight || 0, // Add or overwrite the maxWeight property
+				  }))
 			  });
 			  console.log('workout added to db:', workoutObjects, currentUser.uid)
 		} catch (error){

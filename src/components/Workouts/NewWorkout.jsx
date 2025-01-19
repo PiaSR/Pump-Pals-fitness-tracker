@@ -21,12 +21,12 @@ const NewWorkout = () => {
   return (
 	<div className='flex justify-center items-center py-6 w-[100dvw]  h-[100dvh] sm:w-[80dvw] md:w-[70dvw] lg:max-w-4xl sm:h-[90dvh] bg-bg-white bg-opacity-60 sm:rounded-3xl '>
 		
-		<div className='flex flex-col w-9/12 h-full sm:h-[90%] p-4  '>
+		<div className='flex flex-col w-10/12 md:w-9/12 h-full sm:h-[90%] p-4  '>
 		{/* header */}
 			<div className='flex flex-col mb-10 '>
-			<MdOutlineKeyboardArrowDown onClick={()=> startNewWorkout()} className='text-3xl'/>
+			<MdOutlineKeyboardArrowDown onClick={()=> startNewWorkout()} className='text-3xl text-gray-800'/>
 
-			<h3 className=' text-2xl justify-self-center mt-6'>New Workout</h3>
+			<h3 className=' text-2xl justify-self-center mt-6 text-gray-800'>New Workout</h3>
 			</div>
 
 
