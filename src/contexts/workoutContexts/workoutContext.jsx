@@ -19,6 +19,7 @@ export function WorkoutProvider({ children }) {
 	const [workoutStarted, setWorkoutStarted] = useState(false)
    	const [addedExerciseIds, setAddedExerciseIds] =useState([]) // For storing Ids
    	const [addedExerciseObjects, setAddedExerciseObjects] = useState([]); // For storing full objects
+	const [workoutCollection, setWorkoutCollection] = useState([])
 
 
     const startNewWorkout = useCallback(() => {
@@ -31,9 +32,12 @@ export function WorkoutProvider({ children }) {
         
     })
 
-    useEffect(() => {
-      console.log("addedExerciseToWorkout objects",addedExerciseObjects)
-    }, [startNewWorkout])
+	//get the workout collection when user is logged in, to display in library
+	useEffect(() => {
+		if (currentUser) {
+		  getWorkoutsFromDb();
+		}
+	  }, [currentUser]);
 
     function handleAddExercise (id)  {
       setAddedExerciseIds((prevId) =>  {
@@ -82,11 +86,9 @@ export function WorkoutProvider({ children }) {
 			};
 		  });
 	  
-		  setAddedExerciseObjects(updatedExerciseObjects);
-		  console.log("Updated exercise objects with max reps:", updatedExerciseObjects);
+		  setAddedExerciseObjects(updatedExerciseObjects || []);
 	  
-		  // Add workout to the database
-		  addWorkoutToUserDb(updatedExerciseObjects);
+		  
 		} catch (error) {
 		  console.error("Error fetching exercise objects:", error);
 		}
@@ -97,14 +99,16 @@ export function WorkoutProvider({ children }) {
       console.log("removed exercises:", addedExerciseIds)
     }
 
+
+	// Add workout to the database (only once "end workout" button is clicked)
 	async function addWorkoutToUserDb (workoutObjects) {
     
 		try {
 			
-			const userRef = doc(collection(db, `users/${currentUser.uid}/workouts`) );
-			await setDoc(userRef, {
+			const docRef = doc(collection(db, `users/${currentUser.uid}/workouts`) );
+			await setDoc(docRef, {
 				
-				workoutTitle: 'New Workout',
+				workoutTitle: 'Workout',
 				addedAt: new Date(),
 				exercises: workoutObjects.map((exercise) => ({
 					...exercise, 
@@ -119,6 +123,42 @@ export function WorkoutProvider({ children }) {
 
 	}
 
+	async function getWorkoutsFromDb() {
+		try {
+		  if (!currentUser || !db) return;
+	  
+		  const workoutsRef = collection(db, `users/${currentUser.uid}/workouts`);
+		  const querySnapshot = await getDocs(workoutsRef);
+	  
+		  const workouts = querySnapshot.docs.map((doc) => {
+			const data = doc.data();
+	  
+			// Convert Firestore Timestamp to JavaScript Date
+			if (data.addedAt) {
+			  data.addedAt = data.addedAt.toDate(); // Convert Timestamp to Date
+			  data.addedAtFormatted = data.addedAt.toLocaleString(undefined, {
+				day: "2-digit",
+				month: "short",
+				hour: '2-digit',
+				minute: "2-digit",
+				hour12: false,
+			  }); 
+			}
+	  
+			return {
+			  id: doc.id,
+			  ...data,
+			};
+		  });
+	  
+		  setWorkoutCollection(workouts);
+		  console.log("Fetched workouts:", workouts);
+		} catch (error) {
+		  console.error("Error fetching workouts from Firestore:", error);
+		}
+	  }
+	  
+	  
 
 	const value = {
 		workoutStarted,
@@ -131,7 +171,9 @@ export function WorkoutProvider({ children }) {
 		getExerciseObjects,
 		handleRemoveExercise,
 		startNewWorkout,
-		addWorkoutToUserDb
+		addWorkoutToUserDb,
+		workoutCollection,
+		getWorkoutsFromDb
 
 	}
 

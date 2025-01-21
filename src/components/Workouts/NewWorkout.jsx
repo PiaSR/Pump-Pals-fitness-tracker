@@ -2,21 +2,29 @@ import React from 'react'
 import { useWorkout } from '../../contexts/workoutContexts/workoutContext'
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import ExerciseSetsContainer from '/src/components/Workouts/ExerciseSetsContainer.jsx'
+import { useNavigate } from 'react-router-dom';
+import { useExercise } from '../../contexts/workoutContexts/exerciseContext';
 
 
 
 const NewWorkout = () => {
-	
-	const {workoutStarted,
-		setWorkoutStarted,
-		addedExerciseIds,
-		setAddedExerciseIds,
+	const { setWorkoutStarted} = useExercise()
+	const {
 		addedExerciseObjects,
-		setAddedExerciseObjects,
-		handleAddExercise,
-		
-		handleRemoveExercise,
-		startNewWorkout} = useWorkout()
+		startNewWorkout,
+		setAddedExerciseIds,
+		addWorkoutToUserDb,
+		setAddedExerciseObjects
+		} = useWorkout()
+	const navigate = useNavigate()
+
+	const handleEndWorkoutBtn =() => {
+		addWorkoutToUserDb(addedExerciseObjects)
+		setAddedExerciseIds([])
+		setAddedExerciseObjects([])
+		setWorkoutStarted(false)
+		navigate('/')
+	}
 
   return (
 	<div className='flex justify-center items-center py-6 w-[100dvw]  h-[100dvh] sm:w-[80dvw] md:w-[70dvw] lg:max-w-4xl sm:h-[90dvh] bg-bg-white bg-opacity-60 sm:rounded-3xl '>
@@ -31,8 +39,17 @@ const NewWorkout = () => {
 
 
 			{/* exercise container */}
-			<ExerciseSetsContainer addedExerciseObjects={addedExerciseObjects} />
+			<ExerciseSetsContainer  />
 
+
+			<button className='btn-secondary w-[85%] text-sm justify-self-end mt-8' 
+				onClick={()=> startNewWorkout()}
+				>Add Exercises
+				</button>
+			<button className='btn-secondary w-[85%] text-sm justify-self-end mt-8 bg-red-400' 
+				onClick={handleEndWorkoutBtn}
+				>End Workout
+				</button>
 		</div>
 	</div>
   )

@@ -18,7 +18,7 @@ import { useNavigate } from 'react-router-dom';
 const WorkoutSearch = () => {
 
 	const {exercises , fetchAllExercises,fetchExercisesByMuscle, fetchExercisesByEquipment, getExerciseByIdObject, loading, error} = useExercise();
-	const {addedExerciseIds,handleAddExercise,handleRemoveExercise,startNewWorkout} = useWorkout()
+	const {addedExerciseIds,setAddedExerciseIds,handleAddExercise,handleRemoveExercise,startNewWorkout} = useWorkout()
 	const [searchInput, setSearchInput] =useState("");
 	const [muscleGroup, setMuscleGroup] = useState("");
 	const [equipment, setEquipment] = useState("");
@@ -45,6 +45,7 @@ const WorkoutSearch = () => {
 
 
 	const handleCancelBtn = () => {
+		setAddedExerciseIds([])
 		navigate('/')
 	}
 

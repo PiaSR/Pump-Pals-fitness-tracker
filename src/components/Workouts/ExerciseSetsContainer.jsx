@@ -17,7 +17,7 @@ const ExerciseSetsContainer = () => {
   return (
 	<div >
 		{loading && <p>Loading...</p>}
-	{!loading && addedExerciseObjects.map((exercise, index) => (
+	{!loading && Array.isArray(addedExerciseObjects) &&  addedExerciseObjects.map((exercise, index) => (
 		<ExerciseSetsEachExercise exercise={exercise} index={index} />
 	))}
 	</div>
