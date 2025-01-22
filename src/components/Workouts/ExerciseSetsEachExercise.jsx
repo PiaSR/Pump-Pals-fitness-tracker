@@ -22,7 +22,7 @@ const ExerciseSetsEachExercise = ({exercise, index}) => {
 	}
   return (
 	<div 
-			className='flex flex-col border border-solid border-gray-400 rounded-md p-5 my-6'
+			className='flex flex-col border border-solid border-gray-400 rounded-md p-5 my-6 bg-red-600 w-full '
 			key={exercise.id}
 			>
 		<div className='flex justify-between'>
@@ -35,7 +35,7 @@ const ExerciseSetsEachExercise = ({exercise, index}) => {
 		</div>
 
 
-		<div className=' p-1 md:p-3 grid grid-cols-[auto_1fr_1fr_auto] justify-center items-center gap-3 md:gap-5 mt-3'>
+		<div className=' p-1 md:p-3 grid grid-cols-[auto_1fr_1fr_auto] justify-center items-center gap-3 md:gap-5 mt-3 w-full bg-yellow-400'>
 			<div className='w-8 h-8 flex justify-center items-center text-gray-400 rounded-full border-solid border border-gray-400 p-2'>{index+1}</div>
 
 			<input 
@@ -43,7 +43,7 @@ const ExerciseSetsEachExercise = ({exercise, index}) => {
 			value={repsInput}
 			onChange={handleRepsInput}
 			placeholder={exercise.maxReps > 0 ? `Max: ${exercise.maxReps}` : "Reps"}
-			className='flex justify-center items-center border-gray-400 rounded-md border-solid border py-2 text-gray-500'>
+			className='flex justify-center items-center border-gray-400 rounded-md border-solid border py-2 text-gray-500 bg-purple-500'>
 				{/* {exercise.maxReps >0 
 				? {maxReps}
 				: "Reps"
