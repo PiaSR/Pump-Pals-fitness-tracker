@@ -46,7 +46,7 @@ const WorkoutSearch = () => {
 
 	const handleCancelBtn = () => {
 		setAddedExerciseIds([])
-		navigate('/')
+		navigate(-1)
 	}
 
 	const handleMuscleGroupChange = useCallback ( async (muscleGroup) => {
@@ -128,7 +128,7 @@ const WorkoutSearch = () => {
 		
 	   {/* flex items-start lg:items-center flex-col */}
 	   {/* SEARCH BAR SECTION */}
-			<div className='w-full lg:max-w-xl p-4 grid grid-cols-1 sm:rounded-t-3xl mt-3 mb-2'>  
+			<div className='w-full lg:max-w-xl p-4 grid grid-cols-1 sm:rounded-t-3xl mt-6 mb-3'>  
 			  
 					<div className="relative rounded-full flex gap-2 w-full ">
 					<input
@@ -180,8 +180,10 @@ const WorkoutSearch = () => {
 				  {filteredExercises.map((exercise) => (
 					<li key={exercise.id} className="w-full list-none flex  flex-col hover:bg-bg-white hover:bg-opacity-30">
 						
-					  <div className='grid grid-cols-[1fr_auto] items-center text-sm text-gray-700 px-7 py-6  '>
-					  <div className='truncate' onClick={()=>goToExerciseInfo(exercise.id)} >{exercise.name} </div> 
+					  <div className='grid grid-cols-[1fr_auto] items-center text-md text-gray-700 px-12 py-8  '>
+					  <div className='truncate' onClick={()=>goToExerciseInfo(exercise.id)} >
+						{exercise.name} 
+					  </div> 
 					  {addedExerciseIds.some((exId)=> exId === exercise.id) ? (
 							<FaMinusCircle className='text-2xl text-red-400 cursor-pointer' onClick={()=> handleRemoveExercise(exercise.id)}/>
 					  ) : (
@@ -204,7 +206,7 @@ const WorkoutSearch = () => {
 			
 				<StartNewWorkoutBtn className="w-[85%]" />
 
-				<button className='btn-secondary w-[85%] text-sm justify-self-end mt-8 bg-red-400' 
+				<button className='btn-secondary w-[85%] text-sm justify-self-end  bg-red-400' 
 				onClick={handleCancelBtn}
 				>Cancel
 				</button>

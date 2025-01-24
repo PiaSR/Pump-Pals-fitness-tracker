@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from 'react'
+import React from 'react'
 import NewWorkout from '../components/Workouts/NewWorkout';
 
 import WorkoutSearch from '../components/Workouts/WorkoutSearch';

@@ -20,7 +20,7 @@ export function WorkoutProvider({ children }) {
    	const [addedExerciseIds, setAddedExerciseIds] =useState([]) // For storing Ids
    	const [addedExerciseObjects, setAddedExerciseObjects] = useState([]); // For storing full objects
 	const [workoutCollection, setWorkoutCollection] = useState([])
-
+	const [selectedWorkout, setSelectedWorkout] =useState(null)
 
     const startNewWorkout = useCallback(() => {
       if (addedExerciseIds.length === 0) {
@@ -31,6 +31,14 @@ export function WorkoutProvider({ children }) {
         getExerciseObjects()
         
     })
+
+	
+
+	const startWorkoutFromSavedLibrary = useCallback((workout) => {
+		setWorkoutStarted(!workoutStarted)
+		setAddedExerciseObjects(workout)
+		
+	})
 
 	//get the workout collection when user is logged in, to display in library
 	useEffect(() => {
@@ -81,8 +89,8 @@ export function WorkoutProvider({ children }) {
 	  
 			return {
 			  ...exercise,
-			  maxReps: matchingExercise ? matchingExercise.reps : null, // Set max reps if found
-			  maxWeight: matchingExercise ? matchingExercise.weight : null, // Set max weight if found
+			  maxReps: matchingExercise ? matchingExercise.maxReps : null, // Set max reps if found
+			  maxWeight: matchingExercise ? matchingExercise.maxWeight : null, // Set max weight if found
 			};
 		  });
 	  
@@ -171,10 +179,12 @@ export function WorkoutProvider({ children }) {
 		getExerciseObjects,
 		handleRemoveExercise,
 		startNewWorkout,
+		startWorkoutFromSavedLibrary,
 		addWorkoutToUserDb,
 		workoutCollection,
-		getWorkoutsFromDb
-
+		getWorkoutsFromDb,
+		selectedWorkout,
+		setSelectedWorkout
 	}
 
 	return (

@@ -1,7 +1,10 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
+import { useWorkout } from '../../contexts/workoutContexts/workoutContext'
 
-export const SelectWorkoutOption = ({setWorkoutStarted, onClick}) => {
+export const SelectWorkoutOption = () => {
+
+	const {workoutStarted, setWorkoutStarted} = useWorkout()
 
 	const handleCancelClick =() => {
 		setWorkoutStarted(false)
@@ -20,7 +23,7 @@ export const SelectWorkoutOption = ({setWorkoutStarted, onClick}) => {
 		><Link to='/workout'> Create custom workout</Link></button>
     <button 
       className='btn-secondary text-sm w-full my-3 bg-opacity-40'
-      onClick={onClick}
+      
     >Use a template</button>
 
     <button className='btn-secondary w-full text-sm justify-self-end bg-red-400' onClick={handleCancelClick}>Cancel</button>

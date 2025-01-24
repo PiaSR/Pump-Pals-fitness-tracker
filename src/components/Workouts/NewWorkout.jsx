@@ -14,6 +14,7 @@ const NewWorkout = () => {
 		startNewWorkout,
 		setAddedExerciseIds,
 		addWorkoutToUserDb,
+		workoutStarted,
 		setAddedExerciseObjects
 		} = useWorkout()
 	const navigate = useNavigate()
@@ -26,10 +27,12 @@ const NewWorkout = () => {
 		navigate('/')
 	}
 
+	//add updated maxRep maxWeight to db when ending workout
+
   return (
-	<div className='flex justify-center items-center py-6 w-[100dvw]  h-[100dvh] sm:w-[80dvw] md:w-[70dvw] lg:max-w-4xl sm:h-[90dvh] bg-bg-white bg-opacity-60 sm:rounded-3xl '>
+	<div className='flex justify-center items-center py-2 w-[100dvw]  h-[100dvh] sm:w-[80dvw] md:w-[70dvw] lg:max-w-4xl sm:h-[90dvh] bg-bg-white bg-opacity-60 sm:rounded-3xl '>
 		
-		<div className='flex flex-col w-10/12 md:w-9/12 h-full sm:h-[90%] p-4  '>
+		<div className='flex flex-col justify-between w-10/12 md:w-9/12 sm:h-[90%] p-2 h-full '>
 		{/* header */}
 			<div className='flex flex-col mb-10 '>
 			<MdOutlineKeyboardArrowDown onClick={()=> startNewWorkout()} className='text-3xl text-gray-800'/>
@@ -42,11 +45,8 @@ const NewWorkout = () => {
 			<ExerciseSetsContainer  />
 
 
-			<button className='btn-secondary w-[85%] text-sm justify-self-end mt-8' 
-				onClick={()=> startNewWorkout()}
-				>Add Exercises
-				</button>
-			<button className='btn-secondary w-[85%] text-sm justify-self-end mt-8 bg-red-400' 
+		
+			<button className='btn-secondary w-full text-sm justify-self-end mt-1 bg-red-400' 
 				onClick={handleEndWorkoutBtn}
 				>End Workout
 				</button>

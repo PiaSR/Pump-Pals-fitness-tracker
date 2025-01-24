@@ -17,10 +17,9 @@ import {  collection,  getDocs } from "firebase/firestore";
 const ExerciseSetsEachExercise = ({exercise, index, key}) => {
 	
 	const [sets, setSets] = useState([
-		{ reps: exercise.maxReps || "", weight: exercise.maxWeight || "" },
+		{ reps: exercise.maxReps || "", weight: exercise.maxWeight || "" , finishSet: false},
 	  ]); 
-	
-
+	const [collapseSets, setCollapseSets] = useState(false)
 	
 	const handleSetChange = (setIndex, key, value) => {
 		const updatedSets = sets.map((set, i) =>
@@ -34,7 +33,19 @@ const ExerciseSetsEachExercise = ({exercise, index, key}) => {
 		setSets([...sets, { reps: lastSet.reps, weight: lastSet.weight }]);
 	  };
 
+	const toggleFinishSet = (setIndex) => {
+		const updatedSets = sets.map((set, i) =>
+		  i === setIndex ? { ...set, finishSet: !set.finishSet } : set
+		);
+		setSets(updatedSets);
+	  };
 
+	const handleCollapseSets = () => {
+		setCollapseSets(!collapseSets)
+	}
+
+	
+	
 	
   return (
 	<div 
@@ -50,7 +61,7 @@ const ExerciseSetsEachExercise = ({exercise, index, key}) => {
 			
 		</div>
 
-		{sets.map((set, setIndex) => (
+		{!collapseSets && sets.map((set, setIndex) => (
 		<div className=' p-1 md:p-3 grid grid-cols-[auto_1fr_1fr_auto] justify-center items-center gap-2  mt-3 w-full '>
 			<div className='w-7 h-7 flex justify-center items-center text-gray-400 rounded-full border-solid border border-gray-400 p-2 m-1 '>
 				{setIndex+1}
@@ -61,11 +72,8 @@ const ExerciseSetsEachExercise = ({exercise, index, key}) => {
 			value={set.reps} //when new set is added, input fields should have same values as previous set
 			onChange={(e) => handleSetChange(setIndex, 'reps', e.target.value)}
 			placeholder={exercise.maxReps > 0 ? `Max: ${exercise.maxReps}` : "Reps"}
-			className='flex justify-center items-center border-gray-400 rounded-md border-solid border p-2 text-gray-500  w-full'>
-				{/* {exercise.maxReps >0 
-				? {maxReps}
-				: "Reps"
-				} */}
+			className={`${set.finishSet? "bg-green-200" : "bg-white"} flex justify-center items-center border-gray-400 rounded-md border-solid border p-2 text-gray-500  w-full`}>
+				
 				
 			</input>
 			<input 
@@ -73,25 +81,27 @@ const ExerciseSetsEachExercise = ({exercise, index, key}) => {
 			value={ set.weight} //when new set is added, input fields should have same values as previous set
 			onChange={(e) => handleSetChange(setIndex, 'weight', e.target.value)}
 			placeholder={exercise.maxWeight > 0 ? `Max: ${exercise.maxWeight}` : "Weight"}
-			className='flex justify-center items-center border-gray-400 rounded-md border-solid border p-2 text-gray-500 w-full'>
-			{/* {exercise.maxWeight >0 
-				? {maxWeight}
-				: "Weight"
-				} */}
+			className={`${set.finishSet? "bg-green-200" : "bg-white"} flex justify-center items-center border-gray-400 rounded-md border-solid border p-2 text-gray-500 w-full`}>
+			
 				
 			</input>
-			<div className='w-8 h-8 flex justify-center items-center rounded-full bg-gray-300'>
-				<TiTick className='text-white text-2xl'/>
+			<div className={`${set.finishSet? "bg-green-600" : "bg-gray-300"} w-7 h-7 flex justify-center items-center rounded-full `}>
+				<TiTick 
+					className='text-white text-2xl'
+					onClick={()=>toggleFinishSet(setIndex)}
+				/>
 			</div>
 
 		</div>))}
 
 		<div className='flex justify-between items-center relative mt-3'>
-		<PiPlusCircleThin 
-		className='text-gray-400 text-4xl cursor-pointer ml-1'
-		onClick={()=>handleAddAnotherSet()} />
+			<PiPlusCircleThin 
+			className='text-gray-400 text-4xl cursor-pointer ml-1'
+			onClick={()=>handleAddAnotherSet()} />
+
 			<FaGripLines 
 			className='text-gray-400 mt-4 absolute justify-self-center left-1/2 -translate-x-1/2 cursor cursor-pointer'
+			onClick={()=>handleCollapseSets()}
 			 />
 				
 			

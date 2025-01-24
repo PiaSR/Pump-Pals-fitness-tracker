@@ -11,15 +11,22 @@ import  ExerciseSetsEachExercise from '/src/components/Workouts/ExerciseSetsEach
 
 const ExerciseSetsContainer = () => {
 	const {loading} = useExercise()
-	const {addedExerciseObjects} = useWorkout()
+	const {addedExerciseObjects, startNewWorkout, workoutStarted} = useWorkout()
 	
 
+
   return (
-	<div >
+	<div className=' flex flex-col w-full h-[70%] overflow-y-auto overflow-x-hidden ' >
 		{loading && <p>Loading...</p>}
 	{!loading && Array.isArray(addedExerciseObjects) &&  addedExerciseObjects.map((exercise, index) => (
-		<ExerciseSetsEachExercise exercise={exercise} index={index} />
+		
+		<ExerciseSetsEachExercise exercise={exercise} index={index} key={exercise.id}/>
+		
 	))}
+	{!loading && <button className="btn-secondary w-full text-sm justify-self-end mt-8 "
+		onClick={()=> startNewWorkout()}
+		>Add Exercises
+		</button>}
 	</div>
   )
   

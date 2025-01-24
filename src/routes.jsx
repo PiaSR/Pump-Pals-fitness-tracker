@@ -11,6 +11,7 @@ import ProgressPage from './pages/ProgressPage';
 import ProfilePage from './pages/ProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
 import FavoriteExercisesListPage from './pages/FavoriteExercisesListPage';
+import SavedWorkoutPage from './pages/SavedWorkoutPage';
 
 
 const AppRoutes = () => {
@@ -33,6 +34,7 @@ const RequireAuth =({children}) => {
       <Route path="/register" element={<RegisterPage />} />
 
       <Route path="/" element={<RequireAuth><HomePage /></RequireAuth>} />
+      <Route path="/library_workout" element={<RequireAuth><SavedWorkoutPage /></RequireAuth>} />
       <Route path="/dashboard" element={<RequireAuth><DashboardPage /></RequireAuth>} />
       <Route path="/workout" element={<RequireAuth><WorkoutPage /></RequireAuth>} />
       <Route path="/information" element={<RequireAuth><ExerciseInfoPage /> </RequireAuth>}/>

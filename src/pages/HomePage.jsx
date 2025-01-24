@@ -1,35 +1,43 @@
-import React, {useState} from 'react'
-import {LibraryHomepage} from '/src/components/Homepage/LibraryHomepage'
+import React, {useState, useEffect} from 'react'
+import {LibrarySavedWorkouts} from '/src/components/Homepage/LibrarySavedWorkouts'
 import { SelectWorkoutOption } from '../components/Homepage/SelectWorkoutOption'
-import { useExercise } from '../contexts/workoutContexts/exerciseContext'
 import Navbar from '/src/components/Common/Navbar'
 import { useWorkout } from '../contexts/workoutContexts/workoutContext'
-import ShowSavedWorkout from '../components/Homepage/ShowSavedWorkout'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const HomePage = () => {
-  const {workoutStarted, setWorkoutStarted} = useExercise()
-  const [selectedWorkout, setSelectedWorkout] =useState(null)
-  const {workoutCollection, setAddedExerciseObjects, startNewWorkout} = useWorkout()
-
+  const { setAddedExerciseObjects, workoutStarted, setWorkoutStarted, selectedWorkout, setSelectedWorkout} = useWorkout()
+  const navigate = useNavigate()
+  const location = useLocation()
 
 const handleShowCompletedWorkout = (workout) => {
   console.log("workout:", workout)
   
   setSelectedWorkout(workout)
   setAddedExerciseObjects(workout.exercises)
+  navigate('/library_workout')
+}
+
+const handleStartWorkoutBtn = () => {
   setWorkoutStarted(true)
 }
 
+// Reset `selectedWorkout` when navigating back to `/` (otherwise screen is blank)
+useEffect(() => {
+  if (location.pathname === '/') {
+    setSelectedWorkout(null);
+  }
+}, [location.pathname]);
+
 return (
   <>
-  {!workoutStarted &&
+  {!selectedWorkout && !workoutStarted &&
     <div className='flex flex-col justify-between  w-[100dvw]  h-[100dvh] sm:w-[80dvw] md:w-[70dvw] lg:max-w-4xl sm:h-[90dvh] bg-bg-white bg-opacity-60 sm:rounded-3xl sm:m-3'>
-    <LibraryHomepage handleShowCompletedWorkout={handleShowCompletedWorkout} selectedWorkout={selectedWorkout}/>
+    <LibrarySavedWorkouts handleShowCompletedWorkout={handleShowCompletedWorkout} selectedWorkout={selectedWorkout} handleStartWorkoutBtn={handleStartWorkoutBtn}/>
     <Navbar /> 
     </div>}
-  {/* {workoutStarted && <SelectWorkoutOption setWorkoutStarted={setWorkoutStarted}/>} */}
-{workoutStarted && <ShowSavedWorkout selectedWorkout={selectedWorkout} setWorkoutStarted={setWorkoutStarted}/>}
   
+  {!selectedWorkout && workoutStarted && <SelectWorkoutOption />}
   </>
 )
   
