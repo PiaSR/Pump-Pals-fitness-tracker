@@ -48,7 +48,7 @@ body {
 
 @layer base {
   h1 {
-    @apply text-4xl font-bold;
+    @apply text-3xl font-bold;
   }
   h3 {
     @apply text-3xl font-bold;
@@ -61,7 +61,7 @@ body {
   }
 
   .btn-secondary {
-    @apply py-3.5 px-10 bg-bg-primary bg-opacity-75 text-white rounded-3xl font-bold text-base;
+    @apply py-3.5 px-10 bg-bg-primary text-white rounded-3xl font-bold text-base;
   }
   .alert {
     @apply p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-200 dark:bg-gray-800 dark:text-red-400;

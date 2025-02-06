@@ -206,7 +206,7 @@ const WorkoutSearch = () => {
 			
 				<StartNewWorkoutBtn className="w-[85%]" />
 
-				<button className='btn-secondary w-[85%] text-sm justify-self-end  bg-red-400' 
+				<button className='btn-secondary w-[85%] text-sm justify-self-end mt-3 bg-red-400' 
 				onClick={handleCancelBtn}
 				>Cancel
 				</button>

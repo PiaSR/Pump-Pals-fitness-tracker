@@ -182,7 +182,9 @@ useEffect(()=> {
   console.log("current favorites are:", favorites)
 },[])
 
-    async function addToFavorites(selectedExercise) {
+
+
+async function addToFavorites(selectedExercise) {
       if (!selectedExercise || !currentUser) {
         console.error("Exercise or current user not found.");
         return;

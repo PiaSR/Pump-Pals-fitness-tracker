@@ -3,6 +3,7 @@ import { db } from "/src/firebase/firebase.js"
 import { doc, setDoc, deleteDoc, updateDoc, collection,  getDocs } from "firebase/firestore";
 import { useExercise } from './exerciseContext';
 import { useAuth } from '../authContexts/authContext';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -21,12 +22,15 @@ export function WorkoutProvider({ children }) {
    	const [addedExerciseObjects, setAddedExerciseObjects] = useState([]); // For storing full objects
 	const [workoutCollection, setWorkoutCollection] = useState([])
 	const [selectedWorkout, setSelectedWorkout] =useState(null)
+	const [sets, setSets] = useState({});
+
 
     const startNewWorkout = useCallback(() => {
       if (addedExerciseIds.length === 0) {
         console.log("No exercises to start a workout.");
         return;
       }
+	
         setWorkoutStarted(!workoutStarted)
         getExerciseObjects()
         
@@ -40,6 +44,7 @@ export function WorkoutProvider({ children }) {
 		
 	})
 
+
 	//get the workout collection when user is logged in, to display in library
 	useEffect(() => {
 		if (currentUser) {
@@ -47,14 +52,9 @@ export function WorkoutProvider({ children }) {
 		}
 	  }, [currentUser]);
 
-    function handleAddExercise (id)  {
-      setAddedExerciseIds((prevId) =>  {
-        if (!prevId.includes(id)) {
-        return [...prevId, id];
-      }
-        console.log("added exercises (just id):", addedExerciseIds)
-    })}
-      
+	
+
+
     async function getExerciseObjects() {
 		try {
 		  // Fetch exercise objects based on addedExerciseIds
@@ -66,6 +66,14 @@ export function WorkoutProvider({ children }) {
 			console.error("Failed to fetch exercises.");
 			return;
 		  }
+
+		  // Initialize sets for each exercise
+		  const initialSets = exerciseObjects.reduce((acc, exercise) => {
+			acc[exercise.id] = [{ reps: 0, weight: 0, finishSet: false }]; // Initialize with one set
+			return acc;
+		  }, {});
+		  
+		  setSets(initialSets);
 	  
 		  // Fetch the user's last workout to get the max reps for each exercise
 		  const workoutsCollection = collection(db, `users/${currentUser.uid}/workouts`);
@@ -101,12 +109,30 @@ export function WorkoutProvider({ children }) {
 		  console.error("Error fetching exercise objects:", error);
 		}
 	  }
+
+
+	const handleAddExercise = (id) => {
+		setAddedExerciseIds((prev) => [...prev, id]);
+	
+		// Ensure the exercise has a default set structure
+		setSets((prev) => ({
+		  ...prev,
+		  [id]: prev[id] || [{ reps: 10, weight: 0 }],
+		}));
+	  };
+      
   
     const handleRemoveExercise = (exerciseId) => {
-      addedExerciseIds((prev)=> prev.filter((exId)=> exId !== exerciseId))
+      setAddedExerciseIds((prev)=> prev.filter((exId)=> exId !== exerciseId))
       console.log("removed exercises:", addedExerciseIds)
     }
 
+	const updateExerciseSets = (id, updatedSets) => {
+		setSets((prev) => ({
+		  ...prev,
+		  [id]: updatedSets,
+		}));
+	  };
 
 	// Add workout to the database (only once "end workout" button is clicked)
 	async function addWorkoutToUserDb (workoutObjects) {
@@ -184,7 +210,10 @@ export function WorkoutProvider({ children }) {
 		workoutCollection,
 		getWorkoutsFromDb,
 		selectedWorkout,
-		setSelectedWorkout
+		setSelectedWorkout,
+		sets,
+		setSets,
+		updateExerciseSets
 	}
 
 	return (

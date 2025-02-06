@@ -28,9 +28,13 @@ const FavoriteWorkouts = () => {
 		navigate("/information")
 	}
 
+  const startNewWorkoutFromFavorites = () => {
+    navigate('/workout')
+    startNewWorkout()
+  }
 
   return (
-	<div className='flex flex-col justify-start items-center pb-5 w-[100dvw]  h-[100dvh] sm:w-[80dvw] md:w-[70dvw] lg:max-w-4xl sm:h-[90dvh] bg-bg-white bg-opacity-60 sm:rounded-3xl sm:m-3 '>
+	<div className='flex flex-col items-center pb-5 w-[100dvw]  h-[100dvh] sm:w-[80dvw] md:w-[70dvw] lg:max-w-4xl sm:h-[90dvh] bg-bg-white bg-opacity-60 sm:rounded-3xl sm:m-3 '>
     
       <div className='grid grid-cols-[auto_1fr] w-full content-center p-5 mt-8 '> 
            <MdArrowBackIos className='self-center ml-5' onClick={handleClickBackArrow} />
@@ -40,7 +44,7 @@ const FavoriteWorkouts = () => {
       </div>
       
       
-      <div className='overflow-y-auto overflow-x-hidden flex flex-col mt-6' > 
+      <div className='overflow-y-auto overflow-x-hidden flex flex-col mt-6 w-full h-full content-center' > 
           
           {favorites && favorites.length > 0 
         ? (
@@ -50,7 +54,7 @@ const FavoriteWorkouts = () => {
               <li key={index}
               className="w-full list-none flex  flex-col hover:bg-bg-white hover:bg-opacity-30">
               
-                <div className='grid grid-cols-[1fr_auto] items-center text-sm text-gray-700 px-7 py-6  '>
+                <div className='grid grid-cols-[1fr_auto] items-center text-md text-gray-700 px-12 py-8  '>
 					  <div className='truncate' onClick={()=>goToExerciseInfo(exercise.id)} >{exercise.name} </div> 
             {addedExerciseIds.some((exId)=> exId === exercise.id) ? (
 							<FaMinusCircle className='text-2xl text-red-400 cursor-pointer' onClick={()=> handleRemoveExercise(exercise.id)}/>
@@ -76,10 +80,18 @@ const FavoriteWorkouts = () => {
           </div>
         )}
       
-       {/* <div className='p-0 m-0'>  */}
-          <StartNewWorkoutBtn className="w-full" />
-          {/* </div> */}
+
+        
+
     </div>
+
+    <div className="flex justify-center w-full mt-auto">
+    {addedExerciseIds && addedExerciseIds.length>0 && <button 
+				className='btn-secondary text-sm mt-auto w-[85%]'
+				onClick={()=>startNewWorkoutFromFavorites()}>
+					Add {addedExerciseIds.length} exercise{addedExerciseIds.length>1 ? "s" : ""}
+				</button>}
+          </div>
     
     </div>
    

@@ -14,7 +14,7 @@ const NewWorkout = () => {
 		startNewWorkout,
 		setAddedExerciseIds,
 		addWorkoutToUserDb,
-		workoutStarted,
+		setSelectedWorkout,
 		setAddedExerciseObjects
 		} = useWorkout()
 	const navigate = useNavigate()
@@ -23,6 +23,7 @@ const NewWorkout = () => {
 		addWorkoutToUserDb(addedExerciseObjects)
 		setAddedExerciseIds([])
 		setAddedExerciseObjects([])
+		setSelectedWorkout(null)
 		setWorkoutStarted(false)
 		navigate('/')
 	}
@@ -46,7 +47,7 @@ const NewWorkout = () => {
 
 
 		
-			<button className='btn-secondary w-full text-sm justify-self-end mt-1 bg-red-400' 
+			<button className='btn-secondary w-full  justify-self-end mt-1 sm:mt-4 bg-red-400' 
 				onClick={handleEndWorkoutBtn}
 				>End Workout
 				</button>

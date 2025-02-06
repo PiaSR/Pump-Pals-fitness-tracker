@@ -43,13 +43,8 @@ const ShowSavedWorkout = () => {
 		  {/* exercise container */}
 		  <ExerciseSetsContainer  />
 
-
-		  <button className='btn-secondary bg-opacity-40 w-[85%] text-sm justify-self-end mt-8' 
-			onClick={()=>handleAddExercisesClick()}
-			>Add Exercises
-			</button>
 		  
-			<button className='btn-secondary w-[85%] text-sm justify-self-end mt-8' 
+			<button className='btn-secondary w-full text-sm justify-self-end mt-8' 
 			onClick={()=>handleStartSavedWorkout(selectedWorkout)}
 			>Start Workout
 			</button>

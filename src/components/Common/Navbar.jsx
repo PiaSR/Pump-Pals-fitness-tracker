@@ -7,9 +7,9 @@ import { NavLink } from 'react-router-dom';
 
 
 const Navbar = () => {
-	const activeClassName = 'text-purple-700'
+	const activeClassName = 'text-bg-primary'
   return (
-	<div className='flex justify-between text-2xl text-gray-800 h-full bg-bg-white bg-opacity-30 px-16 sm:px-24 py-8 w-full sm:rounded-b-3xl '>
+	<div className='flex justify-between items-center text-2xl text-gray-800 h-full bg-bg-white bg-opacity-30 px-16 sm:px-24 py-8 w-full sm:rounded-b-3xl '>
 		<NavLink to='/' className={({isActive} )=> 
 			`${isActive? activeClassName : ''} hover:text-purple-500`}><FaThList to='/'/></NavLink>
 		

@@ -1,25 +1,38 @@
-import React, {useState} from 'react'
+import React, {useEffect} from 'react'
 import { useWorkout } from '../../contexts/workoutContexts/workoutContext'
-import NewWorkout from '../Workouts/NewWorkout'
 import { useAuth } from '/src/contexts/authContexts/authContext'
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
+import { useNavigate } from 'react-router-dom';
 
 
 
 
 
-export function LibrarySavedWorkouts ({ selectedWorkout, handleShowCompletedWorkout, handleStartWorkoutBtn}) {
+export function LibrarySavedWorkouts ({  handleShowCompletedWorkout, handleStartWorkoutBtn}) {
 
 const {currentUser} = useAuth()
-const {workoutCollection, setAddedExerciseObjects, startNewWorkout} = useWorkout()
+const {workoutCollection} = useWorkout()
+const navigate = useNavigate()
 
+useEffect(() => {
+  if (!currentUser) {
+    navigate("/login")
+  }
+}, [currentUser, navigate])
+
+
+if (!currentUser) return null 
 
   return (
 	<div className='flex justify-center items-center flex-col pt-6 h-[85%] w-[100dvw] sm:w-[80dvw] md:w-[70dvw] lg:max-w-4xl  bg-bg-white bg-opacity-60 sm:rounded-t-3xl  '>
      
-    
-    <div className='flex flex-col items-center w-10/12 md:w-9/12 h-full   '>
-    <h3 className=' text-2xl my-6 pl-6 text-gray-800 self-start'>{`${currentUser.displayName}'s Library`}</h3>
+ <div className='flex flex-col items-center w-10/12 md:w-9/12 h-full   '>
+        <h3 className='text-2xl mt-12 mb-6 pl-9 sm:pl-11 text-gray-800 self-start'>
+          {currentUser?.displayName 
+            ? `${currentUser.displayName.charAt(0).toUpperCase()}${currentUser.displayName.slice(1)}'s Library`
+            : "User's Library"}
+        </h3>
+
         
         <div className='overflow-y-auto overflow-x-hidden flex w-full '>
           {workoutCollection.length>0 ? (
@@ -48,10 +61,7 @@ const {workoutCollection, setAddedExerciseObjects, startNewWorkout} = useWorkout
           onClick={()=>handleStartWorkoutBtn()}>
             Start New Workout
             </button> 
-        </div> 
-        
-          
-        
+        </div>        
     
   </div>
  

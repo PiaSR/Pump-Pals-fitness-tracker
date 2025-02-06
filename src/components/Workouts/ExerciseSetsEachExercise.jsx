@@ -6,32 +6,29 @@ import { TiTick } from "react-icons/ti";
 import { useAuth } from '../../contexts/authContexts/authContext';
 import { db } from "/src/firebase/firebase.js" 
 import { PiPlusCircleThin } from "react-icons/pi";
-
-
 import { FaGripLines } from "react-icons/fa";
 
 
-import {  collection,  getDocs } from "firebase/firestore";
 
-
-const ExerciseSetsEachExercise = ({exercise, index, key}) => {
-	
-	const [sets, setSets] = useState([
-		{ reps: exercise.maxReps || "", weight: exercise.maxWeight || "" , finishSet: false},
-	  ]); 
+const ExerciseSetsEachExercise = ({exercise,  key}) => {
+	const {sets, setSets, updateExerciseSets} = useWorkout()
 	const [collapseSets, setCollapseSets] = useState(false)
 	
 	const handleSetChange = (setIndex, key, value) => {
-		const updatedSets = sets.map((set, i) =>
-		  i === setIndex ? { ...set, [key]: value } : set
-		);
-		setSets(updatedSets);
-	  };
+		const updatedSets = [...(sets[exercise.id] || [])];
+		updatedSets[setIndex][key] = value;
+		updateExerciseSets(exercise.id, updatedSets);
+	};
+	
 
 	const handleAddAnotherSet = () => {
-		const lastSet = sets[sets.length - 1];
-		setSets([...sets, { reps: lastSet.reps, weight: lastSet.weight }]);
-	  };
+		const lastSet = sets[exercise.id][sets[exercise.id].length - 1];
+		setSets(prevSets => ({
+			...prevSets,
+			[exercise.id]: [...prevSets[exercise.id], { reps: lastSet.reps, weight: lastSet.weight, finishSet: false }]
+		}));
+	};
+	
 
 	const toggleFinishSet = (setIndex) => {
 		const updatedSets = sets.map((set, i) =>
@@ -61,8 +58,8 @@ const ExerciseSetsEachExercise = ({exercise, index, key}) => {
 			
 		</div>
 
-		{!collapseSets && sets.map((set, setIndex) => (
-		<div className=' p-1 md:p-3 grid grid-cols-[auto_1fr_1fr_auto] justify-center items-center gap-2  mt-3 w-full '>
+		{!collapseSets && sets[exercise.id] && sets[exercise.id].map((set, setIndex) => (
+		<div className=' p-1 md:p-3 grid grid-cols-[auto_1fr_1fr_auto] justify-center items-center gap-2  mt-3 w-full ' key={setIndex}>
 			<div className='w-7 h-7 flex justify-center items-center text-gray-400 rounded-full border-solid border border-gray-400 p-2 m-1 '>
 				{setIndex+1}
 			</div>
