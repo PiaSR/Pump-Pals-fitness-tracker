@@ -49,6 +49,12 @@ const WorkoutSearch = () => {
 		navigate(-1)
 	}
 
+	const handleAddExerciseBtn = useCallback(async(exerciseId) => {
+		await handleAddExercise(id);
+}, []);
+
+
+
 	const handleMuscleGroupChange = useCallback ( async (muscleGroup) => {
 	  setMuscleGroup(muscleGroup);
 	  try {

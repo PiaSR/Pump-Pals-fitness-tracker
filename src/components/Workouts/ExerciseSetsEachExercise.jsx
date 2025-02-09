@@ -17,7 +17,10 @@ const ExerciseSetsEachExercise = ({exercise,  key}) => {
 	const handleSetChange = (setIndex, key, value) => {
 		const updatedSets = [...(sets[exercise.id] || [])];
 		updatedSets[setIndex][key] = value;
-		updateExerciseSets(exercise.id, updatedSets);
+		setSets(prev => ({
+			...prev,
+			[exercise.id]: updatedSets
+		  }));
 	};
 	
 

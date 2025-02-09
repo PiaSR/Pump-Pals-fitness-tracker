@@ -27,14 +27,33 @@ export function WorkoutProvider({ children }) {
 
 
     const startNewWorkout = useCallback(() => {
-      if (addedExerciseIds.length === 0) {
-        console.log("No exercises to start a workout.");
-        return;
-      }
-        setWorkoutStarted(!workoutStarted)
-        getExerciseObjects()
+		try {
+			const isWorkoutStarted = workoutStarted;
+		console.log("Toggling workout started:", isWorkoutStarted);
+  
+		setWorkoutStarted(!isWorkoutStarted);
+	  
+		if (!isWorkoutStarted) {
+		  console.log("Fetching exercise objects");
+     
+	 // Only fetch exercises that haven't been added yet
+	 const newExerciseIds = addedExerciseIds.filter(
+		(id) => !addedExerciseObjects.some((ex) => ex.id === id)
+	);
+
+	if (newExerciseIds.length === 0) {
+		console.log("No new exercises to fetch.");
+		return;
+	}
+
+
+	getExerciseObjects(newExerciseIds);
+	} 
+	}
+	catch(error) {
+		console.error("Error starting new workout:", error);
         
-    })
+    }},[addedExerciseIds, workoutStarted, getExerciseObjects]);
 
 	
 
@@ -55,18 +74,21 @@ export function WorkoutProvider({ children }) {
 	
 
 
-    async function getExerciseObjects() {
+    async function getExerciseObjects(exerciseIds) {
 		try {
-		  // Fetch exercise objects based on addedExerciseIds
-		  const exerciseObjects = await Promise.all(
-			addedExerciseIds.map((id) => fetchExerciseById(id))
-		  );
-	  
-		  if (!exerciseObjects || exerciseObjects.length === 0) {
-			console.error("Failed to fetch exercises.");
-			return;
-		  }
-	  
+			if (exerciseIds.length === 0) {
+				console.log("No exercises to fetch.");
+				return;
+			}
+	
+			const exerciseObjects = await Promise.all(
+				exerciseIds.map((id) => fetchExerciseById(id))
+			);
+	
+			if (!exerciseObjects || exerciseObjects.length === 0) {
+				console.error("Failed to fetch exercises.");
+				return;
+			}
 		  // Fetch the user's last workout to get the max reps for each exercise
 		  const workoutsCollection = collection(db, `users/${currentUser.uid}/workouts`);
 		  const workoutSnapshot = await getDocs(workoutsCollection);
@@ -94,22 +116,47 @@ export function WorkoutProvider({ children }) {
 			};
 		  });
 		  
-	  
-		  setAddedExerciseObjects(updatedExerciseObjects || []);
+		// Merge old exercises with new ones
+		  setAddedExerciseObjects((prevExercises) => {
+            const existingExercisesMap = new Map(prevExercises.map(ex => [ex.id, ex]));
+            
+            // Add new exercises (overwrite if they already exist)
+            updatedExerciseObjects.forEach(ex => existingExercisesMap.set(ex.id, ex));
+
+            return Array.from(existingExercisesMap.values()); // Convert Map back to array
+        });
+
+        // Keep existing sets and add new ones
+        setSets((prevSets) => {
+            const newSets = { ...prevSets };
+
+            updatedExerciseObjects.forEach((exercise) => {
+                if (!newSets[exercise.id]) {
+                    newSets[exercise.id] = [{
+                        reps: exercise.maxReps > 0 ? exercise.maxReps : "",
+                        weight: exercise.maxWeight > 0 ? exercise.maxWeight : "",
+                        finishSet: false
+                    }];
+                }
+            });
+
+            return newSets;
+        });
+		//   setAddedExerciseObjects(updatedExerciseObjects || []);
 
 		  // Initialize sets for each exercise
-		  const initialSets = updatedExerciseObjects.reduce((acc, exercise) => {
-			acc[exercise.id] = [{ 
-				reps: exercise.maxReps>0 ? exercise.maxReps : 0, 
-				weight: exercise.maxWeight>0 ? exercise.maxWeight : 0, 
-				finishSet: false }]; // Initialize with one set
-			return acc;
-		  }, {});
+		//   const initialSets = updatedExerciseObjects.reduce((acc, exercise) => {
+		// 	acc[exercise.id] = [{ 
+		// 		reps: exercise.maxReps>0 ? exercise.maxReps : 0, 
+		// 		weight: exercise.maxWeight>0 ? exercise.maxWeight : 0, 
+		// 		finishSet: false }]; // Initialize with one set
+		// 	return acc;
+		//   }, {});
 
-		  setSets(prevSets => ({
-			...prevSets,
-			...initialSets // Only update new exercises while keeping existing ones
-		}));
+		//   setSets(prevSets => ({
+		// 	...prevSets,
+		// 	...initialSets // Only update new exercises while keeping existing ones
+		// }));
 		  
 		} catch (error) {
 		  console.error("Error fetching exercise objects:", error);
@@ -117,25 +164,35 @@ export function WorkoutProvider({ children }) {
 	  }
 
 
-	const handleAddExercise = async (id) => {
+	const handleAddExercise =  async (id) => {
+		console.log("handleAddExercise called with id:", id);
+
 		const exercise = await fetchExerciseById(id);
 
 		if (sets[id]) {
-			console.log("Exercise already added.");
+			console.log("Exercise already added:", sets[id]);
 			return;
 		  }
+
+		  console.log("Adding new exercise:", id);
 		setAddedExerciseIds((prev) => [...prev, id]);
 	
 		// Ensure the exercise has a default set structure
 		setSets((prev) => ({
 		  ...prev,
 		  [id]: prev[id] || [{ 
-			reps: exercise.maxReps>0 ? exercise.maxReps : 0, 
-			weight: exercise.maxWeight>0 ? exercise.maxWeight : 0, 
+			reps: exercise.maxReps>0 ? exercise.maxReps : "", 
+			weight: exercise.maxWeight>0 ? exercise.maxWeight : "", 
 			finishSet: false }],
 		}));
+		console.log("sets after handleAddExercise", sets);
+
 	  };
       
+	
+	  useEffect(()=> {
+		console.log("sets adter handleAddExercise", sets)
+	  }, [handleAddExercise])
   
     const handleRemoveExercise = (exerciseId) => {
       setAddedExerciseIds((prev)=> prev.filter((exId)=> exId !== exerciseId))
@@ -150,18 +207,12 @@ export function WorkoutProvider({ children }) {
 	const updateExerciseSets = (id, updatedSets) => {
 		setSets((prev) => {
 			const newSets = { ...prev, [id]: updatedSets };
-			localStorage.setItem('workoutSets', JSON.stringify(newSets)); // Store in localStorage, otherwise sets are not persisting
+		
 			return newSets;
 		});
 	};
 	
-	//get saved sets from local strage
-	useEffect(() => {
-		const savedSets = localStorage.getItem('workoutSets');
-		if (savedSets) {
-			setSets(JSON.parse(savedSets));
-		}
-	}, []);
+
 
 	// Add workout to the database (only once "end workout" button is clicked)
 	async function addWorkoutToUserDb (workoutObjects) {
