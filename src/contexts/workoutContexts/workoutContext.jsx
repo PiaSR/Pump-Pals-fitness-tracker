@@ -23,6 +23,7 @@ export function WorkoutProvider({ children }) {
 	const [workoutCollection, setWorkoutCollection] = useState([])
 	const [selectedWorkout, setSelectedWorkout] =useState(null)
 	const [sets, setSets] = useState({});
+	
 
 
     const startNewWorkout = useCallback(() => {
@@ -30,7 +31,6 @@ export function WorkoutProvider({ children }) {
         console.log("No exercises to start a workout.");
         return;
       }
-	
         setWorkoutStarted(!workoutStarted)
         getExerciseObjects()
         
@@ -66,14 +66,6 @@ export function WorkoutProvider({ children }) {
 			console.error("Failed to fetch exercises.");
 			return;
 		  }
-
-		  // Initialize sets for each exercise
-		  const initialSets = exerciseObjects.reduce((acc, exercise) => {
-			acc[exercise.id] = [{ reps: 0, weight: 0, finishSet: false }]; // Initialize with one set
-			return acc;
-		  }, {});
-		  
-		  setSets(initialSets);
 	  
 		  // Fetch the user's last workout to get the max reps for each exercise
 		  const workoutsCollection = collection(db, `users/${currentUser.uid}/workouts`);
@@ -101,9 +93,23 @@ export function WorkoutProvider({ children }) {
 			  maxWeight: matchingExercise ? matchingExercise.maxWeight : null, // Set max weight if found
 			};
 		  });
+		  
 	  
 		  setAddedExerciseObjects(updatedExerciseObjects || []);
-	  
+
+		  // Initialize sets for each exercise
+		  const initialSets = updatedExerciseObjects.reduce((acc, exercise) => {
+			acc[exercise.id] = [{ 
+				reps: exercise.maxReps>0 ? exercise.maxReps : 0, 
+				weight: exercise.maxWeight>0 ? exercise.maxWeight : 0, 
+				finishSet: false }]; // Initialize with one set
+			return acc;
+		  }, {});
+
+		  setSets(prevSets => ({
+			...prevSets,
+			...initialSets // Only update new exercises while keeping existing ones
+		}));
 		  
 		} catch (error) {
 		  console.error("Error fetching exercise objects:", error);
@@ -111,13 +117,22 @@ export function WorkoutProvider({ children }) {
 	  }
 
 
-	const handleAddExercise = (id) => {
+	const handleAddExercise = async (id) => {
+		const exercise = await fetchExerciseById(id);
+
+		if (sets[id]) {
+			console.log("Exercise already added.");
+			return;
+		  }
 		setAddedExerciseIds((prev) => [...prev, id]);
 	
 		// Ensure the exercise has a default set structure
 		setSets((prev) => ({
 		  ...prev,
-		  [id]: prev[id] || [{ reps: 10, weight: 0 }],
+		  [id]: prev[id] || [{ 
+			reps: exercise.maxReps>0 ? exercise.maxReps : 0, 
+			weight: exercise.maxWeight>0 ? exercise.maxWeight : 0, 
+			finishSet: false }],
 		}));
 	  };
       
@@ -125,14 +140,28 @@ export function WorkoutProvider({ children }) {
     const handleRemoveExercise = (exerciseId) => {
       setAddedExerciseIds((prev)=> prev.filter((exId)=> exId !== exerciseId))
       console.log("removed exercises:", addedExerciseIds)
+
+	  setSets((prev) => {
+		const { [exerciseId]: _, ...rest } = prev; // Remove the specific exercise's sets
+		return rest;
+	  });
     }
 
 	const updateExerciseSets = (id, updatedSets) => {
-		setSets((prev) => ({
-		  ...prev,
-		  [id]: updatedSets,
-		}));
-	  };
+		setSets((prev) => {
+			const newSets = { ...prev, [id]: updatedSets };
+			localStorage.setItem('workoutSets', JSON.stringify(newSets)); // Store in localStorage, otherwise sets are not persisting
+			return newSets;
+		});
+	};
+	
+	//get saved sets from local strage
+	useEffect(() => {
+		const savedSets = localStorage.getItem('workoutSets');
+		if (savedSets) {
+			setSets(JSON.parse(savedSets));
+		}
+	}, []);
 
 	// Add workout to the database (only once "end workout" button is clicked)
 	async function addWorkoutToUserDb (workoutObjects) {

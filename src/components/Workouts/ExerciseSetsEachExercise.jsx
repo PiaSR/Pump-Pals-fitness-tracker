@@ -22,20 +22,34 @@ const ExerciseSetsEachExercise = ({exercise,  key}) => {
 	
 
 	const handleAddAnotherSet = () => {
+		// If no sets exist for this exercise, initialize with a default set
+		if (!sets[exercise.id]) {
+		  setSets(prevSets => ({
+			...prevSets,
+			[exercise.id]: [{ reps: exercise.maxReps > 0 ? exercise.maxReps : 0, weight: exercise.maxWeight > 0 ? exercise.maxWeight : 0, finishSet: false }]
+		  }));
+		  return;
+		}
+	  
+		// If sets exist, add a new one based on the last set
 		const lastSet = sets[exercise.id][sets[exercise.id].length - 1];
 		setSets(prevSets => ({
-			...prevSets,
-			[exercise.id]: [...prevSets[exercise.id], { reps: lastSet.reps, weight: lastSet.weight, finishSet: false }]
+		  ...prevSets,
+		  [exercise.id]: [
+			...prevSets[exercise.id], 
+			{ reps: lastSet.reps, weight: lastSet.weight, finishSet: false }
+		  ]
 		}));
-	};
+	  };
 	
 
 	const toggleFinishSet = (setIndex) => {
-		const updatedSets = sets.map((set, i) =>
+		const updatedSets = sets[exercise.id].map((set, i) =>
 		  i === setIndex ? { ...set, finishSet: !set.finishSet } : set
 		);
-		setSets(updatedSets);
+		setSets((prev) => ({ ...prev, [exercise.id]: updatedSets }));
 	  };
+
 
 	const handleCollapseSets = () => {
 		setCollapseSets(!collapseSets)
