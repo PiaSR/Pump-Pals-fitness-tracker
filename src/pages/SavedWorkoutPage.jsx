@@ -1,5 +1,5 @@
 import React from 'react'
-import ShowSavedWorkout from '../components/Homepage/ShowSavedWorkout'
+import ShowSavedWorkout from '../components/Library/ShowSavedWorkout'
 import { useWorkout } from '../contexts/workoutContexts/workoutContext'
 
 const SavedWorkoutPage = () => {

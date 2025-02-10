@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import React, { useContext } from 'react';
 import { useAuth } from './contexts/authContexts/authContext';
-import HomePage from './pages/HomePage';
+import LibraryPage from './pages/LibraryPage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import WorkoutPage from './pages/WorkoutPage';
@@ -33,7 +33,8 @@ const RequireAuth =({children}) => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
 
-      <Route path="/" element={<RequireAuth><HomePage /></RequireAuth>} />
+      <Route path="/" element={<RequireAuth><DashboardPage /></RequireAuth>} />
+      <Route path="/library" element={<RequireAuth><LibraryPage /></RequireAuth>} />
       <Route path="/library_workout" element={<RequireAuth><SavedWorkoutPage /></RequireAuth>} />
       <Route path="/dashboard" element={<RequireAuth><DashboardPage /></RequireAuth>} />
       <Route path="/workout" element={<RequireAuth><WorkoutPage /></RequireAuth>} />

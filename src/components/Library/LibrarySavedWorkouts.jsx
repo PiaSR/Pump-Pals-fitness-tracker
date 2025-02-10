@@ -37,7 +37,9 @@ if (!currentUser) return null
         <div className='overflow-y-auto overflow-x-hidden flex w-full '>
           {workoutCollection.length>0 ? (
             <ul className='w-full min-w-[320px]'>
-          {workoutCollection.map((workout)=> (
+          {workoutCollection
+          .sort((a,b)=> new Date(b.addedAtFormatted) - new Date (a.addedAtFormatted))
+          .map((workout)=> (
             <li
             key={workout.id}
             className="p-1 sm:p-3 flex flex-col "

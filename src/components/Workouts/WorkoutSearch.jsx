@@ -13,6 +13,7 @@ import DropdownEquipment from '/src/components/Workouts/dropdowns/DropdownEquipm
 import BtnFavoriteList from '/src/components/Buttons/BtnFavoriteList.jsx';
 import StartNewWorkoutBtn from '/src/components/Buttons/StartNewWorkoutBtn'
 import { useNavigate } from 'react-router-dom';
+import LoadingScreen from '../Common/LoadingScreen';
 
 
 const WorkoutSearch = () => {
@@ -49,9 +50,6 @@ const WorkoutSearch = () => {
 		navigate(-1)
 	}
 
-	const handleAddExerciseBtn = useCallback(async(exerciseId) => {
-		await handleAddExercise(id);
-}, []);
 
 
 
@@ -117,7 +115,7 @@ const WorkoutSearch = () => {
 	 
 	
 	  if (loading) {
-		return <p>Loading exercises...</p>;
+		return <LoadingScreen />
 	  }
 	
 	  if (error) {
@@ -177,7 +175,7 @@ const WorkoutSearch = () => {
 		  {/* LIST SECTION */}
   
 			<div className='overflow-y-auto overflow-x-hidden flex' > 
-			  {loading && <p>Loading exercises...</p>}
+			  {loading && <LoadingScreen /> }
 			  {error && <p>Error: {error}</p>}
 			  
 			  {filteredExercises && filteredExercises.length > 0 

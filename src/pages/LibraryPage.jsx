@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react'
-import {LibrarySavedWorkouts} from '/src/components/Homepage/LibrarySavedWorkouts'
-import { SelectWorkoutOption } from '../components/Homepage/SelectWorkoutOption'
+import {LibrarySavedWorkouts} from '/src/components/Library/LibrarySavedWorkouts'
+import { SelectWorkoutOption } from '../components/Library/SelectWorkoutOption'
 import Navbar from '/src/components/Common/Navbar'
 import { useWorkout } from '../contexts/workoutContexts/workoutContext'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-const HomePage = () => {
+const LibraryPage = () => {
   const { setAddedExerciseObjects, workoutStarted, setWorkoutStarted, selectedWorkout, setSelectedWorkout} = useWorkout()
   const navigate = useNavigate()
   const location = useLocation()
@@ -43,4 +43,4 @@ return (
   
 }
 
-export default HomePage
+export default LibraryPage
