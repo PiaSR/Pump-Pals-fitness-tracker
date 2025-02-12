@@ -142,21 +142,7 @@ export function WorkoutProvider({ children }) {
 
             return newSets;
         });
-		//   setAddedExerciseObjects(updatedExerciseObjects || []);
-
-		  // Initialize sets for each exercise
-		//   const initialSets = updatedExerciseObjects.reduce((acc, exercise) => {
-		// 	acc[exercise.id] = [{ 
-		// 		reps: exercise.maxReps>0 ? exercise.maxReps : 0, 
-		// 		weight: exercise.maxWeight>0 ? exercise.maxWeight : 0, 
-		// 		finishSet: false }]; // Initialize with one set
-		// 	return acc;
-		//   }, {});
-
-		//   setSets(prevSets => ({
-		// 	...prevSets,
-		// 	...initialSets // Only update new exercises while keeping existing ones
-		// }));
+		
 		  
 		} catch (error) {
 		  console.error("Error fetching exercise objects:", error);

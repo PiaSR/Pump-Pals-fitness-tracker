@@ -5,6 +5,7 @@ import DashboardAnimation from '../components/Dashboard/DashboardAnimation'
 import { useAuth } from '../contexts/authContexts/authContext'
 import { IoMdSunny } from "react-icons/io";
 import { BsFillMoonStarsFill } from "react-icons/bs";
+import RoutinesCarousel from '../components/Dashboard/RoutinesCarousel'
 
 
 
@@ -49,8 +50,8 @@ const DashboardPage = () => {
     </div>
     
 
-    
-    <CardGeneric />
+    <RoutinesCarousel />
+   
     <CardGeneric />
 
     </div>
