@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import LoadingScreen from '../components/Common/LoadingScreen'
-import CardGeneric from '../components/Dashboard/CardGeneric'
+import Navbar from '/src/components/Common/Navbar'
 import DashboardAnimation from '../components/Dashboard/DashboardAnimation'
 import { useAuth } from '../contexts/authContexts/authContext'
 import { IoMdSunny } from "react-icons/io";
@@ -33,7 +33,7 @@ const DashboardPage = () => {
 	<div className='flex flex-col justify-between items-center  w-[100dvw]  h-[100dvh] sm:w-[80dvw] md:w-[70dvw] lg:max-w-4xl sm:h-[90dvh] p-3 sm:rounded-3xl '>
     
     {/* HEADER */}
-    <div className='background-gradient w-full max-w-lg p-5 rounded-md h-[30%] flex justify-between items-center'>
+    <div className='background-gradient w-full max-w-lg p-5 rounded-md h-auto flex justify-between items-center'>
       <div className='mt-5 ml-5'>
         <div className='text-gray-400 flex gap-2'>
         
@@ -41,9 +41,9 @@ const DashboardPage = () => {
         <p className='text-xs font-semibold  mb-3'>{currentDate.toUpperCase()}</p>
 
         </div>
-        <div className='flex flex-col sm:flex-row'>
+        <div className='flex flex-wrap items-start'>
           <h3 className='text-gray-500'>Hello,&nbsp;</h3>
-          <h3 className='text-gray-900'>{currentUser.displayName}</h3>
+          <h3 className='text-gray-900 break-all'>{currentUser.displayName}</h3>
         </div>
         
       </div>
@@ -55,11 +55,11 @@ const DashboardPage = () => {
     <h4 className='text-gray-700 text-md font-bold self-start p-4'>ROUTINES</h4>
     <RoutinesCarousel bgColor='bg-orange'/>
    
-
-    <RoutinesCarousel bgColor='bg-orange'/>
+    <h4 className='text-gray-700 text-md font-bold self-start p-4 mt-2'>EXERCISES</h4>
+    <RoutinesCarousel bgColor='bg-bg-primary'/>
    
-    
-
+  
+    <Navbar />
     </div>
   )
 }

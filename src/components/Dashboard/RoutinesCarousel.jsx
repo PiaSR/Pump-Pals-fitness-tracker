@@ -9,32 +9,34 @@ import test from "/src/assets/images/test.jpg"
 
 const RoutinesCarousel = ({bgColor}) => {
 	const {favorites} = useExercise()
-	console.log('Favorites in RoutinesCarousel:', favorites);
 
 
 	const responsive = {
+		largeDesktop: {
+			breakpoint: { max: 4000, min: 3000 },
+			items: 3.1,
+			slidesToSlide: 1, // optional, default to 1.
+		  },
 		desktop: {
 		  breakpoint: { max: 3000, min: 1024 },
-		  items: 3.3,
+		  items: 2.3,
 		  slidesToSlide: 1, // optional, default to 1.
-		  partialVisibilityGutter: 30
 		},
 		tablet: {
 		  breakpoint: { max: 1024, min: 464 },
-		  items: 1.8,
+		  items: 1.5,
 		  slidesToSlide: 1, // optional, default to 1.
-		  partialVisibilityGutter: 30
 		},
 		mobile: {
 		  breakpoint: { max: 464, min: 0 },
 		  items: 1.2,
 		  slidesToSlide: 1, // optional, default to 1.
-		  partialVisibilityGutter: 30
+		  
 		}
 	  };
 
   return (
-	<div className="w-full h-[35%]">
+	<div className="w-full h-[25%] ">
 	<Carousel
 		swipeable={true}
 		draggable={false}
@@ -56,12 +58,17 @@ const RoutinesCarousel = ({bgColor}) => {
 		// deviceType={this.props.deviceType}
 		dotListClass="custom-dot-list-style"
 		
-		itemClass="carousel-item-padding-30px carousel-item-gap-10px carousel-item-center carousel-justify-center carousel-item-no-transition "
+		itemClass="carousel-item-padding-30px  carousel-item-center carousel-justify-items-center h-full mr-3"
 		>
 		{
 			
 		favorites.map(exercise => (
-			<CardGeneric exerciseName={exercise.name} imgSrc={test} bgColor={bgColor}/>
+			<CardGeneric 
+				exerciseName={exercise.name} 
+				primMuscle={exercise.primaryMuscles}
+				secMuscle={exercise.secondaryMuscles}
+				imgSrc={test} 
+				bgColor={bgColor}/>
 		))}
 		
 	</Carousel>
