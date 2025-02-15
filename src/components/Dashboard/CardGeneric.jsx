@@ -3,12 +3,12 @@ import { IoMdHeartEmpty } from "react-icons/io";
 import BtnFavoriteList from '../Buttons/BtnFavoriteList';
 
 
-const CardGeneric = ({exerciseName}) => {
+const CardGeneric = ({exerciseName, imgSrc, bgColor}) => {
   return (
-	<div className='bg-bg-white bg-opacity-60 grid grid-cols-[1fr_1fr_auto] w-full  p-3 rounded-md'>
-		<div className='w-full'>
-		<img src='' alt="" className='object-contain w-full' />
-		</div>
+    <div className={`${bgColor} grid grid-cols-[1fr_1fr_auto] w-[280px] p-3 rounded-md`} >
+		
+		<img src={imgSrc} alt="" className='object-fill w-full ' />
+		
 
 		<div className='w-full'>
 			<h4>{exerciseName}</h4>
