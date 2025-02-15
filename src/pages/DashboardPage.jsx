@@ -50,7 +50,7 @@ const DashboardPage = () => {
     </div>
     
 
-    <RoutinesCarousel />
+    <RoutinesCarousel bgColort={'bg-bg'}/>
    
     <CardGeneric />
 
