@@ -6,11 +6,13 @@ import { useAuth } from '../contexts/authContexts/authContext'
 import { IoMdSunny } from "react-icons/io";
 import { BsFillMoonStarsFill } from "react-icons/bs";
 import RoutinesCarousel from '../components/Dashboard/RoutinesCarousel'
+import { useExercise } from '../contexts/workoutContexts/exerciseContext'
 
 
 
 const DashboardPage = () => {
   const {currentUser} = useAuth()
+  const {favorites} = useExercise()
   const [currentDate, setCurrentDate] = useState(getDate());
   const [isDaytime, setIsDaytime] = useState(checkDaytime());
 
@@ -50,9 +52,13 @@ const DashboardPage = () => {
     </div>
     
 
-    <RoutinesCarousel bgColort={'bg-bg'}/>
+    <h4 className='text-gray-700 text-md font-bold self-start p-4'>ROUTINES</h4>
+    <RoutinesCarousel bgColor='bg-orange'/>
    
-    <CardGeneric />
+
+    <RoutinesCarousel bgColor='bg-orange'/>
+   
+    
 
     </div>
   )

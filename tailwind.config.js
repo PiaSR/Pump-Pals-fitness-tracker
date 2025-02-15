@@ -20,7 +20,7 @@ export default {
         "primary-half": "#623CEA80",
         "dark-grey": "#6B6666",
         "light-grey": "#D9D9D9",
-        
+        'orange': '#FD652F'
         
       },
       font: {
