@@ -5,22 +5,26 @@ import BtnFavoriteList from '../Buttons/BtnFavoriteList';
 
 const CardGeneric = ({exerciseName,primMuscle, secMuscle, imgSrc, bgColor}) => {
   return (
-    <div className={`${bgColor} grid grid-cols-[1fr_1fr_auto] w-full p-3 rounded-md text-white  overflow-hidden h-full `} >
+<div className={`${bgColor} grid grid-cols-[35%_1fr_auto] justify-center w-full max-w-[95%] md:max-w-[85%] p-3 rounded-md text-white h-full`}>
 		
-		<img src={imgSrc} alt="" className='object-cover w-full min-w-[90%] h-full rounded-md' />
+		
+		<div className="w-full h-full rounded-md">
+        <img src={imgSrc} alt="" className="object-cover w-full h-full rounded-md" />
+      </div>
+
 		
 
-		<div className='w-full h-full p-2'>
-			<h4 className='font-bold text-md'>{exerciseName}</h4>
-			<div className='flex gap-1 my-3'>
+		<div className='flex flex-col p-2'>
+			<h4 className='font-bold text-sm sm:text-md'>{exerciseName}</h4>
+			<div className='flex flex-wrap gap-1 my-3'>
 				
-				<div className='rounded-full bg-gray-200  text-sm text-gray-900 font-semibold px-2 py-1'>{primMuscle}</div>
+				<div className='rounded-full bg-gray-200 text-xs  md:text-sm text-gray-900 font-semibold px-2 py-1'>{primMuscle}</div>
 				{secMuscle.map(muscle => (
-					<div className='rounded-full bg-gray-200  text-sm text-gray-900 font-semibold px-2 py-1'>{muscle}</div>
+					<div className='rounded-full bg-gray-200  text-xs  md:text-sm text-gray-900 font-semibold px-2 py-1'>{muscle}</div>
 
 				))}
 			</div>
-			<BtnFavoriteList className="bg-bg-primary"/>
+			
 		</div>
 		<IoMdHeartEmpty className=''/> 
 	</div>

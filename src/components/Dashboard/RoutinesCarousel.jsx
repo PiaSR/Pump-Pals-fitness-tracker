@@ -36,7 +36,7 @@ const RoutinesCarousel = ({bgColor}) => {
 	  };
 
   return (
-	<div className="w-full h-[25%] ">
+	
 	<Carousel
 		swipeable={true}
 		draggable={false}
@@ -50,7 +50,7 @@ const RoutinesCarousel = ({bgColor}) => {
 		customTransition="all .5"
 		transitionDuration={500}
 		containerClass="carousel-container"
-		// removeArrowOnDeviceType={["tablet", "mobile"]}
+		removeArrowOnDeviceType={["tablet", "mobile"]}
 		customRightArrow={<ArrowRightCarousel />}
 		customLeftArrow={<ArrowLeftCarousel />}
 
@@ -58,7 +58,7 @@ const RoutinesCarousel = ({bgColor}) => {
 		// deviceType={this.props.deviceType}
 		dotListClass="custom-dot-list-style"
 		
-		itemClass="carousel-item-padding-30px  carousel-item-center carousel-justify-items-center h-full mr-3"
+		itemClass="max-h-[200px] w-full sm:w-[90%] md:w-[80%] lg:w-[70%] mr-3"
 		>
 		{
 			
@@ -72,7 +72,7 @@ const RoutinesCarousel = ({bgColor}) => {
 		))}
 		
 	</Carousel>
-	</div>
+
   )
 }
 

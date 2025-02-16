@@ -30,10 +30,10 @@ const DashboardPage = () => {
  
 
   return (
-	<div className='flex flex-col justify-between items-center  w-[100dvw]  h-[100dvh] sm:w-[80dvw] md:w-[70dvw] lg:max-w-4xl sm:h-[90dvh] p-3 sm:rounded-3xl '>
+	<div className='flex flex-col justify-evenly w-[100dvw]  h-[100dvh] sm:w-[80dvw] md:w-[70dvw] lg:max-w-4xl sm:h-[90dvh] p-3 sm:rounded-3xl '>
     
     {/* HEADER */}
-    <div className='background-gradient w-full max-w-lg p-5 rounded-md h-auto flex justify-between items-center'>
+    <div className='background-gradient w-full max-w-lg p-5 rounded-md flex justify-between items-center'>
       <div className='mt-5 ml-5'>
         <div className='text-gray-400 flex gap-2'>
         
@@ -52,14 +52,23 @@ const DashboardPage = () => {
     </div>
     
 
-    <h4 className='text-gray-700 text-md font-bold self-start p-4'>ROUTINES</h4>
-    <RoutinesCarousel bgColor='bg-orange'/>
-   
-    <h4 className='text-gray-700 text-md font-bold self-start p-4 mt-2'>EXERCISES</h4>
-    <RoutinesCarousel bgColor='bg-bg-primary'/>
-   
+          <h4 className='text-gray-700 text-md font-bold self-start p-4'>ROUTINES</h4>
+          <div className="w-full max-w-screen-md md:max-w-[90%] mx-auto">
+          <RoutinesCarousel bgColor='bg-orange'/>
+          </div>
+
+    
+          <h4 className='text-gray-700 text-md font-bold self-start p-4 mt-2'>EXERCISES</h4>
+          <div className="w-full max-w-screen-md md:max-w-[90%] mx-auto">
+
+          <RoutinesCarousel bgColor='bg-bg-primary'/>
+          </div>
+
   
-    <Navbar />
+      <div className='justify-self-end'>
+      <Navbar />
+      </div>
+      
     </div>
   )
 }
