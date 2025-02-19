@@ -8,70 +8,75 @@ import { BsFillMoonStarsFill } from "react-icons/bs";
 import ExerciseCarousel from '../components/Dashboard/ExerciseCarousel'
 import { useExercise } from '../contexts/workoutContexts/exerciseContext'
 import RoutinesCarousel from '../components/Dashboard/RoutinesCarousel'
+import { useWorkout } from '../contexts/workoutContexts/workoutContext'
 
 
 
 const DashboardPage = () => {
   const {currentUser} = useAuth()
   const {favorites} = useExercise()
-  const [currentDate, setCurrentDate] = useState(getDate());
-  const [isDaytime, setIsDaytime] = useState(checkDaytime());
+  const {templates} = useWorkout()
+  // const [currentDate, setCurrentDate] = useState(getDate());
+  // const [isDaytime, setIsDaytime] = useState(checkDaytime());
 
-  function getDate() {
-    const today = new Date()
-    const month = today.toLocaleString('default', { month: 'short' })
-    const date = today.getDate()
-    const day = today.toLocaleString('locale', { weekday: 'short' })
-    return `${day} ${date} ${month}`
-  }
-  function checkDaytime() {
-    const hour = new Date().getHours();
-    return hour >= 6 && hour < 18; // Daytime: 6 AM - 5:59 PM
-  }
+  // function getDate() {
+  //   const today = new Date()
+  //   const month = today.toLocaleString('default', { month: 'short' })
+  //   const date = today.getDate()
+  //   const day = today.toLocaleString('locale', { weekday: 'short' })
+  //   return `${day} ${date} ${month}`
+  // }
+  // function checkDaytime() {
+  //   const hour = new Date().getHours();
+  //   return hour >= 6 && hour < 18; // Daytime: 6 AM - 5:59 PM
+  // }
  
 
   return (
-	<div className='flex flex-col justify-evenly w-[100dvw]  h-[100dvh] sm:w-[80dvw] md:w-[70dvw] lg:max-w-4xl sm:h-[90dvh] p-3 sm:rounded-3xl '>
+	<div className='flex flex-col  content-center w-[100dvw] max-w-lg h-[100dvh] sm:w-[80dvw] md:w-[70dvw] lg:max-w-4xl sm:h-[90dvh] p-3 sm:rounded-3xl '>
     
     {/* HEADER */}
-    <div className='background-gradient w-full max-w-lg p-5 rounded-md flex justify-between items-center'>
-      <div className='mt-5 ml-5'>
-        <div className='text-gray-400 flex gap-2'>
-        
-       {isDaytime ? <IoMdSunny size={14} /> : <BsFillMoonStarsFill size={14} />}
-        <p className='text-xs font-semibold  mb-3'>{currentDate.toUpperCase()}</p>
-
-        </div>
-        <div className='flex flex-wrap items-start'>
-          <h3 className='text-gray-500'>Hello,&nbsp;</h3>
-          <h3 className='text-gray-900 break-all'>{currentUser.displayName}</h3>
-        </div>
-        
-      </div>
-      
-      <DashboardAnimation />
+    <div className='w-full max-w-md p-4 flex flex-col justify-between items-center'>
+      <div className='bg-bg-primary h-12'>logo placeholder</div>
+        <p className='text-gray-500 text-md self-start py-6'>{currentUser?.displayName 
+    ? `${currentUser.displayName[0].toUpperCase()}${currentUser.displayName.slice(1)}, ready to work out?`
+    : "Welcome, ready to work out?"
+  }</p>
+    
+      <div className='bg-radial-gradient w-full h-28 rounded-lg'></div>
     </div>
     
 
-          <h4 className='text-gray-700 text-md font-bold self-start p-4'>ROUTINES</h4>
-          <div className="w-full max-w-screen-md md:max-w-[90%] mx-auto">
-          <RoutinesCarousel bgColor='bg-orange'/>
-          </div>
+          <h4 className='text-gray-700 text-xl font-semibold self-start p-4'>Pump Pal Routines</h4>
+
+        {/* show user's custom or favorited routines if there are any */}
+      {templates && templates.length > 0 && 
+       <div className="w-full max-w-screen-md md:max-w-[90%] mx-auto">
+                <h4 className='text-gray-700 text-xl font-semibold self-start p-4'>My Routines</h4>
+                <RoutinesCarousel bgColor='bg-orange'/>
+        </div>}
+          
+        <div className="w-full max-w-screen-md md:max-w-[90%] mx-auto">
+
+          
+        </div>
+
 
     
-          <h4 className='text-gray-700 text-md font-bold self-start p-4 mt-2'>EXERCISES</h4>
-          <div className="w-full max-w-screen-md md:max-w-[90%] mx-auto">
-
-          <ExerciseCarousel bgColor='bg-bg-primary'/>
-          </div>
-
-  
-      <div className='justify-self-end p-0'>
-      <Navbar />
-      </div>
+      <Navbar className='self-end' />
+    
       
     </div>
   )
 }
 
 export default DashboardPage
+
+
+
+
+//  <h4 className='text-gray-700 text-md font-bold self-start p-4 mt-2'>EXERCISES</h4>
+{/* <div className="w-full max-w-screen-md md:max-w-[90%] mx-auto">
+
+<ExerciseCarousel bgColor='bg-bg-primary'/>
+</div> */}
