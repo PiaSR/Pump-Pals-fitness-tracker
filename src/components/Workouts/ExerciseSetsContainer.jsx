@@ -42,7 +42,7 @@ const ExerciseSetsContainer = () => {
 			/>
 		
 	))}
-	{!loading && <button className="btn-secondary bg-opacity-55 w-full justify-self-end mt-8 "
+	{!loading && <button className="btn-secondary bg-bg-primary w-full justify-self-end mt-8 "
 		onClick={()=> startNewWorkout()}
 		>Add Exercises
 		</button>}

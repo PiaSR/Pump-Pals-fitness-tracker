@@ -24,15 +24,16 @@ useEffect(() => {
 if (!currentUser) return null 
 
   return (
-	<div className='flex justify-center items-center flex-col pt-6 h-[85%] w-[100dvw] sm:w-[80dvw] md:w-[70dvw] lg:max-w-4xl  bg-bg-white bg-opacity-60 sm:rounded-t-3xl  '>
+    // <div className='flex flex-col justify-evenly w-full h-full lg:max-w-4xl sm:h-[90dvh] sm:rounded-3xl '>
      
- <div className='flex flex-col items-center w-10/12 md:w-9/12 h-full   '>
-        <h3 className='text-2xl mt-12 mb-6 pl-9 sm:pl-11 text-gray-800 self-start'>
+ <div className='flex flex-col items-center w-full md:w-9/12 h-full   '>
+        <div className='self-start bg-orange w-full rounded-b-md'>
+        <h3 className='text-2xl my-12  pl-9 sm:pl-11 text-white '>
           {currentUser?.displayName 
             ? `${currentUser.displayName.charAt(0).toUpperCase()}${currentUser.displayName.slice(1)}'s Library`
             : "User's Library"}
         </h3>
-
+        </div>
         
         <div className='overflow-y-auto overflow-x-hidden flex w-full '>
           {workoutCollection.length>0 ? (
@@ -45,7 +46,7 @@ if (!currentUser) return null
             className="p-1 sm:p-3 flex flex-col "
             onClick={()=>handleShowCompletedWorkout(workout)}
             >
-              <div className='text-md text-gray-700 px-8 py-6  flex justify-between'>
+              <div className='text-md text-gray-700 px-12 py-8 flex justify-between'>
               {`${workout.workoutTitle} on ${workout.addedAtFormatted}`}
               <MdOutlineKeyboardArrowRight className='text-xl' />
 
@@ -58,14 +59,10 @@ if (!currentUser) return null
             <p>No workouts found. Start a new workout!</p>
           )}
           </div>
-          <button 
-          className='btn-secondary w-[85%] text-sm justify-self-end mb-2'
-          onClick={()=>handleStartWorkoutBtn()}>
-            Start New Workout
-            </button> 
+         
         </div>        
     
-  </div>
+  // </div>
  
   )
 }

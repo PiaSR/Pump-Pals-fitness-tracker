@@ -10,7 +10,7 @@ import { FaGripLines } from "react-icons/fa";
 
 
 
-const ExerciseSetsEachExercise = ({exercise,  key}) => {
+const ExerciseSetsEachExercise = ({exercise, key}) => {
 	const {sets, setSets, updateExerciseSets} = useWorkout()
 	const [collapseSets, setCollapseSets] = useState(false)
 	

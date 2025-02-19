@@ -5,8 +5,9 @@ import DashboardAnimation from '../components/Dashboard/DashboardAnimation'
 import { useAuth } from '../contexts/authContexts/authContext'
 import { IoMdSunny } from "react-icons/io";
 import { BsFillMoonStarsFill } from "react-icons/bs";
-import RoutinesCarousel from '../components/Dashboard/RoutinesCarousel'
+import ExerciseCarousel from '../components/Dashboard/ExerciseCarousel'
 import { useExercise } from '../contexts/workoutContexts/exerciseContext'
+import RoutinesCarousel from '../components/Dashboard/RoutinesCarousel'
 
 
 
@@ -61,11 +62,11 @@ const DashboardPage = () => {
           <h4 className='text-gray-700 text-md font-bold self-start p-4 mt-2'>EXERCISES</h4>
           <div className="w-full max-w-screen-md md:max-w-[90%] mx-auto">
 
-          <RoutinesCarousel bgColor='bg-bg-primary'/>
+          <ExerciseCarousel bgColor='bg-bg-primary'/>
           </div>
 
   
-      <div className='justify-self-end'>
+      <div className='justify-self-end p-0'>
       <Navbar />
       </div>
       

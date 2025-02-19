@@ -211,6 +211,8 @@ async function addToFavorites(selectedExercise) {
               await setDoc(exerciseRef, {
                 ...selectedExercise,
                 addedAt: new Date(),
+                
+
               });
               // Update local favorites state
               setFavorites((prevFavorites) => [...prevFavorites, selectedExercise]);
@@ -223,6 +225,7 @@ async function addToFavorites(selectedExercise) {
             }
           }
 
+          
 
 const value = {
   exercises,

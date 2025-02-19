@@ -2,14 +2,13 @@ import React from 'react'
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { useExercise } from '../../contexts/workoutContexts/exerciseContext';
-import { useWorkout } from '../../contexts/workoutContexts/workoutContext';
 import ArrowLeftCarousel from '../Buttons/ArrowLeftCarousel';
 import ArrowRightCarousel from '../Buttons/ArrowRightCarousel';
 import CardGeneric from './CardGeneric';
 import test from "/src/assets/images/test.jpg"
 
-const RoutinesCarousel = ({bgColor}) => {
-	const {templates} = useWorkout()
+const ExerciseCarousel = ({bgColor}) => {
+	const {favorites} = useExercise()
 
 
 	const responsive = {
@@ -63,11 +62,12 @@ const RoutinesCarousel = ({bgColor}) => {
 		>
 		{
 			
-		templates.map(template => (
+		favorites.map(exercise => (
 			<CardGeneric 
-				key={template.addedAt}
-				title={template.workoutTitle} 
-				
+				key={exercise.name}
+				title={exercise.name} 
+				primMuscle={exercise.primaryMuscles}
+				secMuscle={exercise.secondaryMuscles}
 				imgSrc={test} 
 				bgColor={bgColor}/>
 		))}
@@ -77,4 +77,4 @@ const RoutinesCarousel = ({bgColor}) => {
   )
 }
 
-export default RoutinesCarousel
+export default ExerciseCarousel

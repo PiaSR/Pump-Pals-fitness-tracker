@@ -7,7 +7,7 @@ import LoginPage from './pages/LoginPage';
 import WorkoutPage from './pages/WorkoutPage';
 import ExerciseInfoPage from './pages/ExerciseInfoPage';
 import DashboardPage from './pages/DashboardPage';
-import ProgressPage from './pages/ProgressPage';
+import MyRoutinesPage from './pages/MyRoutinesPage';
 import ProfilePage from './pages/ProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
 import FavoriteExercisesListPage from './pages/FavoriteExercisesListPage';
@@ -40,7 +40,7 @@ const RequireAuth =({children}) => {
       <Route path="/workout" element={<RequireAuth><WorkoutPage /></RequireAuth>} />
       <Route path="/information" element={<RequireAuth><ExerciseInfoPage /> </RequireAuth>}/>
       <Route path="/favorites" element={<RequireAuth><FavoriteExercisesListPage /></RequireAuth>} />
-      <Route path="/progress" element={<RequireAuth><ProgressPage /></RequireAuth>} />
+      <Route path="/myroutines" element={<RequireAuth><MyRoutinesPage /></RequireAuth>} />
       <Route path="/profile" element={<RequireAuth><ProfilePage/></RequireAuth>}/>
       <Route path="*" element={<NotFoundPage />} />
       console.log(path)

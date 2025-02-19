@@ -23,6 +23,7 @@ export function WorkoutProvider({ children }) {
 	const [workoutCollection, setWorkoutCollection] = useState([])
 	const [selectedWorkout, setSelectedWorkout] =useState(null)
 	const [sets, setSets] = useState({});
+	const [templates, setTemplates] = useState([])
 	
 
 
@@ -45,8 +46,6 @@ export function WorkoutProvider({ children }) {
 		console.log("No new exercises to fetch.");
 		return;
 	}
-
-
 	getExerciseObjects(newExerciseIds);
 	} 
 	}
@@ -176,9 +175,7 @@ export function WorkoutProvider({ children }) {
 	  };
       
 	
-	  useEffect(()=> {
-		console.log("sets adter handleAddExercise", sets)
-	  }, [handleAddExercise])
+	
   
     const handleRemoveExercise = (exerciseId) => {
       setAddedExerciseIds((prev)=> prev.filter((exId)=> exId !== exerciseId))
@@ -210,6 +207,7 @@ export function WorkoutProvider({ children }) {
 				
 				workoutTitle: 'Workout',
 				addedAt: new Date(),
+				isTemplate: false,
 				exercises: workoutObjects.map((exercise) => ({
 					...exercise, 
 					maxReps: exercise.maxReps || 0, // Add or overwrite the maxReps property
@@ -257,7 +255,50 @@ export function WorkoutProvider({ children }) {
 		  console.error("Error fetching workouts from Firestore:", error);
 		}
 	  }
+
+	  useEffect(() => {
+		console.log("Templates updated:", templates);
+	}, [templates]);
+	
+
+	  //change isTemplates in workouts to TRUE, add to templates array
 	  
+	  async function addToTemplates(selectedWorkout) {
+		if (!selectedWorkout || !currentUser) {
+		  console.error("Workout or current user not found.");
+		  return;
+		}
+  
+		try {
+			console.log("Before updating templates:", templates);
+
+			setTemplates(prevTemplates => {
+				const isTemplate = prevTemplates.some(template => template.id === selectedWorkout.id);
+	
+				console.log("Is already a template?", isTemplate);
+
+				const workoutRef = doc(db, `users/${currentUser.uid}/workouts/${selectedWorkout.id}`);
+	
+				if (isTemplate) {
+					// Remove from templates
+					updateDoc(workoutRef, { isTemplate: false });
+					console.log("Removed from templates:", selectedWorkout.id);
+					return prevTemplates.filter(template => template.id !== selectedWorkout.id);
+				} else {
+					// Add to templates
+					updateDoc(workoutRef, { isTemplate: true });
+					console.log("Added to templates:", selectedWorkout.id, 'template:', templates);
+					console.log("After updating templates:", templates); 
+
+					return [...prevTemplates, { ...selectedWorkout, isTemplate: true }];
+				}
+			}
+			);
+		} catch (error) {
+			console.error("Error updating template status:", error);
+		}
+			}
+
 	  
 
 	const value = {
@@ -279,7 +320,10 @@ export function WorkoutProvider({ children }) {
 		setSelectedWorkout,
 		sets,
 		setSets,
-		updateExerciseSets
+		updateExerciseSets,
+		addToTemplates,
+		templates,
+		setTemplates
 	}
 
 	return (

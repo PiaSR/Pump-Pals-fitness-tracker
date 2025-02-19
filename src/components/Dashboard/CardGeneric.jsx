@@ -1,11 +1,10 @@
 import React from 'react'
 import { IoMdHeartEmpty } from "react-icons/io";
-import BtnFavoriteList from '../Buttons/BtnFavoriteList';
 
 
-const CardGeneric = ({exerciseName,primMuscle, secMuscle, imgSrc, bgColor}) => {
+const CardGeneric = ({title,primMuscle, secMuscle, imgSrc, bgColor}) => {
   return (
-<div className={`${bgColor} grid grid-cols-[35%_1fr_auto] justify-center w-full max-w-[95%] md:max-w-[85%] p-3 rounded-md text-white h-full`}>
+<div  className={`${bgColor} grid grid-cols-[35%_1fr_auto] justify-center w-full max-w-[95%] md:max-w-[85%] p-3 rounded-md text-white h-full`}>
 		
 		
 		<div className="w-full h-full rounded-md">
@@ -15,11 +14,14 @@ const CardGeneric = ({exerciseName,primMuscle, secMuscle, imgSrc, bgColor}) => {
 		
 
 		<div className='flex flex-col p-2'>
-			<h4 className='font-bold text-sm sm:text-md'>{exerciseName}</h4>
+			<h4 className='font-bold text-sm sm:text-md'>{title}</h4>
 			<div className='flex flex-wrap gap-1 my-3'>
 				
-				<div className='rounded-full bg-gray-200 text-xs  md:text-sm text-gray-900 font-semibold px-2 py-1'>{primMuscle}</div>
-				{secMuscle.map(muscle => (
+				{primMuscle?.map(muscle =>   (
+					<div className='rounded-full bg-gray-200 text-xs  md:text-sm text-gray-900 font-semibold px-2 py-1'>{muscle}</div>
+				))}
+				
+				{secMuscle?.map(muscle => (
 					<div className='rounded-full bg-gray-200  text-xs  md:text-sm text-gray-900 font-semibold px-2 py-1'>{muscle}</div>
 
 				))}

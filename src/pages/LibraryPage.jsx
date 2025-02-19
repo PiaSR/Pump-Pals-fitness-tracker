@@ -32,8 +32,11 @@ useEffect(() => {
 return (
   <>
   {!selectedWorkout && !workoutStarted &&
-    <div className='flex flex-col justify-between  w-[100dvw]  h-[100dvh] sm:w-[80dvw] md:w-[70dvw] lg:max-w-4xl sm:h-[90dvh] bg-bg-white bg-opacity-60 sm:rounded-3xl sm:m-3'>
-    <LibrarySavedWorkouts handleShowCompletedWorkout={handleShowCompletedWorkout} selectedWorkout={selectedWorkout} handleStartWorkoutBtn={handleStartWorkoutBtn}/>
+    	<div className='flex flex-col items-center pb-3 w-[100dvw] h-[100dvh] sm:w-[80dvw] md:w-[70dvw] lg:max-w-4xl sm:h-[90dvh]  sm:rounded-3xl'>
+
+        <div className="flex flex-col flex-grow w-full overflow-hidden">
+          <LibrarySavedWorkouts handleShowCompletedWorkout={handleShowCompletedWorkout} selectedWorkout={selectedWorkout} handleStartWorkoutBtn={handleStartWorkoutBtn}/>
+          </div>
     <Navbar /> 
     </div>}
   

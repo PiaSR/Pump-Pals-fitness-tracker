@@ -1,18 +1,26 @@
 import React, {useState} from 'react'
 import { useAuth } from '../../contexts/authContexts/authContext';
 import { signOut } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 export default function Profile () {
 
  const [error, setError] = useState("")
- const {currentUser} = useAuth()
+ const {currentUser, auth} = useAuth()
+ const navigate = useNavigate()
 
 
-function handleLogout() {
-	signOut()
-}
+ async function handleLogout() {
+    try {
+      await signOut(auth); 
+      navigate('/login');
+    } catch (err) {
+      setError('Failed to log out');
+      console.error(err);
+    }
+  }
   return (
-	<div className='flex flex-col justify-between items-center  p-10 w-[100dvw]  h-[100dvh] sm:w-[80dvw] md:w-[70dvw] lg:max-w-4xl sm:h-[90dvh] bg-bg-white bg-opacity-60 sm:rounded-3xl sm:m-3'>
+	<div className='flex flex-col justify-between items-center  p-10 w-full  h-full sm:w-[80dvw] md:w-[70dvw] lg:max-w-4xl sm:h-[90dvh] sm:rounded-3xl sm:m-3 '>
 	
 	<h3 className=' text-2xl self-start m-10 text-gray-800'>My Profile</h3>
 		{error && <p className="text-white break-normal w-56 text-xs">{error}</p>}

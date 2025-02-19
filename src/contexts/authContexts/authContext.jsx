@@ -84,7 +84,8 @@ export function useAuth() {
 	const value = {
 		currentUser,
 		signup, 
-		login
+		login,
+		auth
 	}
 
 	return (
